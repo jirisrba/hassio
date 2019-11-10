@@ -1,0 +1,77 @@
+obyvak:
+  name: Obývák
+  entities:
+    - climate.netatmo_01_obyvak
+    - sensor.netatmo_indoor_temperature
+    - sensor.netatmo_indoor_humidity
+    - sensor.netatmo_indoor_noise
+    - sensor.netatmo_indoor_pressure
+    - light.sonoff2_2
+    - light.sonoff_3
+    - sensor.netatmo_indoor_humidity
+pokojicek:
+  name: Pokojíček
+  entities:
+    - climate.netatmo_02_pokojicek
+    - sensor.netatmo_pokojicek_health
+    - sensor.netatmo_pokojicek_co2
+    - sensor.netatmo_pokojicek_temperature
+    - sensor.netatmo_pokojicek_humidity
+    - sensor.netatmo_pokojicek_noise
+    - sensor.netatmo_pokojicek_pressure
+    - light.sonoff_2
+    - switch.sonoff_3
+    - switch.sonoff_6
+koupelna:
+  name: Koupelna
+  entities:
+    - climate.netatmo_03_koupelna
+    - light.sonoff
+    - light.sonoff2
+balkon:
+  name: Balkon
+  entities:
+    - sensor.netatmo_outdoor_battery
+    - sensor.netatmo_outdoor_battery_percent
+    - sensor.netatmo_outdoor_humidity
+    - sensor.netatmo_outdoor_temperature
+akvarko:
+  name: Akvarko
+  entities:
+    - switch.sonoff_4
+    - switch.sonoff_5
+temperature:
+  name: Temperature
+  entities:
+    - sensor.netatmo_outdoor_temperature
+    - sensor.netatmo_indoor_temperature
+    - sensor.netatmo_pokojicek_temperature
+power_consumption:
+  name: Power Consumption
+  entities:
+    - sensor.sonoff_energy_apparentpower
+    - sensor.sonoff_energy_current
+    - sensor.sonoff_energy_factor
+    - sensor.sonoff_energy_power
+    - sensor.sonoff_energy_reactivepower
+    - sensor.sonoff_energy_today
+    - sensor.sonoff_energy_total
+    - sensor.sonoff_energy_totalstarttime
+    - sensor.sonoff_energy_voltage
+    - sensor.sonoff_energy_yesterday
+sonoff_status:
+  name: Sonoff status
+  entities:
+    - sensor.sonoff_status
+    - sensor.sonoff_status_1
+    - sensor.sonoff_status_2
+    - sensor.sonoff_status_3
+    - sensor.sonoff_status_4
+    - sensor.sonoff_status_5
+    - sensor.sonoff_status_6
+    - sensor.sonoff_status_7
+other:
+  name: Other
+  entities:
+    - climate.netatmo_04_kotelna
+    - sensor.netatmo_indoor_co2
