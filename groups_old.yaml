@@ -1,19 +1,20 @@
-obyvak:
-  name: Obývák
+living_room:
+  name: Living room
   entities:
+    - switch.kitchen_light
+    - switch.bed_light
     - climate.netatmo_01_obyvak
     - sensor.netatmo_indoor_temperature
     - sensor.netatmo_indoor_humidity
     - sensor.netatmo_indoor_noise
     - sensor.netatmo_indoor_pressure
-    - light.sonoff2_2
-    - light.sonoff_3
     - sensor.netatmo_indoor_humidity
     - switch.obyvak_tv
     - sensor.obyvak_tv_energy_power
-pokojicek:
-  name: Pokojíček
+kids_room:
+  name: Kids room
   entities:
+    - switch.kids_light
     - climate.netatmo_02_pokojicek
     - sensor.netatmo_pokojicek_health
     - sensor.netatmo_pokojicek_co2
@@ -21,23 +22,18 @@ pokojicek:
     - sensor.netatmo_pokojicek_humidity
     - sensor.netatmo_pokojicek_noise
     - sensor.netatmo_pokojicek_pressure
-    - light.sonoff_2
-    - switch.sonoff_3
-    - switch.sonoff_6
-koupelna:
+bathroom:
   name: Koupelna
   entities:
     - climate.netatmo_03_koupelna
-    - light.sonoff
-    - light.sonoff2
-balkon:
+balcony:
   name: Balkon
   entities:
     - sensor.netatmo_outdoor_battery
     - sensor.netatmo_outdoor_battery_percent
     - sensor.netatmo_outdoor_humidity
     - sensor.netatmo_outdoor_temperature
-akvarko:
+terrarium:
   name: Akvarko
   entities:
     - switch.sonoff_4
@@ -79,10 +75,7 @@ sonoff_status:
     - sensor.sonoff_status_2
     - sensor.sonoff_status_3
     - sensor.sonoff_status_4
-    - sensor.sonoff_status_5
-    - sensor.sonoff_status_6
-    - sensor.sonoff_status_7
-other:
+misc_misc:
   name: Other
   entities:
     - climate.netatmo_04_kotelna
