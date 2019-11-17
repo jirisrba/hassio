@@ -4,10 +4,10 @@ netatmo:
   username: !secret netatmo_username
   password: !secret netatmo_password
 
-media_player:
-  - platform: samsungtv
-    host: 192.168.2.33
-    port: 8001
+# Amazon Echo example configuration.yaml entry
+emulated_hue:
+  host_ip: 192.168.2.4
+  listen_port: 80
 
 panel_iframe:
   tasmoadmin:

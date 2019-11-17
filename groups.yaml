@@ -9,6 +9,8 @@ obyvak:
     - light.sonoff2_2
     - light.sonoff_3
     - sensor.netatmo_indoor_humidity
+    - switch.obyvak_tv
+    - sensor.obyvak_tv_energy_power
 pokojicek:
   name: Pokojíček
   entities:
@@ -59,6 +61,16 @@ power_consumption:
     - sensor.sonoff_energy_totalstarttime
     - sensor.sonoff_energy_voltage
     - sensor.sonoff_energy_yesterday
+    - sensor.obyvak_tv_energy_apparentpower
+    - sensor.obyvak_tv_energy_current
+    - sensor.obyvak_tv_energy_factor
+    - sensor.obyvak_tv_energy_power
+    - sensor.obyvak_tv_energy_reactivepower
+    - sensor.obyvak_tv_energy_today
+    - sensor.obyvak_tv_energy_total
+    - sensor.obyvak_tv_energy_totalstarttime
+    - sensor.obyvak_tv_energy_voltage
+    - sensor.obyvak_tv_energy_yesterday
 sonoff_status:
   name: Sonoff status
   entities:
