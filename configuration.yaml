@@ -4,15 +4,30 @@ netatmo:
   username: !secret netatmo_username
   password: !secret netatmo_password
 
-# Amazon Echo example configuration.yaml entry
+# Amazon Echo configuration.yaml entry
 emulated_hue:
   host_ip: 192.168.2.4
   listen_port: 80
-  exposed_domains:
-    - switch
+  expose_by_default: false
+  #exposed_domains:
+  #  - light
+  #  - switch
   entities:
     switch.bed_light:
       name: "Bed light"
+      hidden: false
+    switch.kitchen_light:
+      name: "Kitchen light"
+      hidden: false
+    switch.kids_light:
+      name: "Kids light"
+      hidden: false
+    switch.kids_tv:
+      name: "Kids TV"
+      hidden: false
+    switch.wc_light:
+      name: "WC light"
+      hidden: false
 
 panel_iframe:
   tasmoadmin:
