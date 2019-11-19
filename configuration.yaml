@@ -9,17 +9,14 @@ emulated_hue:
   host_ip: 192.168.2.4
   listen_port: 80
   expose_by_default: false
-  #exposed_domains:
-  #  - light
-  #  - switch
   entities:
-    switch.bed_light:
+    light.bed_light:
       name: "Bed light"
       hidden: false
-    switch.kitchen_light:
+    light.kitchen_light:
       name: "Kitchen light"
       hidden: false
-    switch.kids_light:
+    light.kids_light:
       name: "Kids light"
       hidden: false
     switch.kids_tv:
@@ -28,6 +25,15 @@ emulated_hue:
     switch.wc_light:
       name: "WC light"
       hidden: false
+
+influxdb:
+  host: a0d7b954-influxdb
+  port: 8086
+  database: homeassistant
+  username: homeassistant
+  password: homeassistant
+  max_retries: 3
+  default_measurement: state
 
 panel_iframe:
   tasmoadmin:
@@ -41,7 +47,6 @@ default_config:
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 # http:
 #   base_url: example.duckdns.org:8123
-
 
 # Text to speech
 tts:
