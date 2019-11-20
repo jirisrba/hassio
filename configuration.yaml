@@ -1,3 +1,11 @@
+homeassistant:
+  latitude: 50.1576534
+  longitude: 14.5168246
+  elevation: 225
+  unit_system: metric
+  time_zone: Europe/Prague
+  name: Domov
+
 netatmo:
   api_key: !secret netatmo_api_key
   secret_key: !secret netatmo_secret_key
@@ -25,6 +33,8 @@ emulated_hue:
     switch.wc_light:
       name: "WC light"
       hidden: false
+    group.all_lights:
+      name: "All lights"
 
 influxdb:
   host: a0d7b954-influxdb
