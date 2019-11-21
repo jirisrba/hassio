@@ -6,6 +6,18 @@ homeassistant:
   time_zone: Europe/Prague
   name: Domov
 
+person:
+  - name: jirka
+    id: jirka
+    device_trackers:
+      - device_tracker.jirka_iphone
+
+# Example configuration.yaml entry
+mikrotik:
+  - host: 192.168.2.1
+    username: admin
+    password: !secret mikrotik_password
+
 netatmo:
   api_key: !secret netatmo_api_key
   secret_key: !secret netatmo_secret_key
@@ -53,6 +65,16 @@ panel_iframe:
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
+
+# Example configuration.yaml entry
+discovery:
+  ignore:
+    - samsung_tv
+  enable:
+    - homekit
+
+# iPhone integration
+# ios:
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 # http:

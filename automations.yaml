@@ -1,12 +1,23 @@
+# configuration.yaml
+
+# Turn off lights when everybody leaves the house
+- alias: 'Rule - Away Mode'
+  trigger:
+    platform: state
+    entity_id: device_tracker
+    to: 'not_home'
+  action:
+    service: light.turn_off
+    entity_id: group.all_lights
+
 - id: pokojicek_light_off
   alias: "Pokojicek Light Off"
   trigger:
       at: "20:00:00"
       platform: time
   action:
-    - service: switch.turn_off
-      data:
-        entity_id: switch.sonoff_6
+    - service: light.turn_off
+      entity_id: light.kitchen_light
 
 - alias: "Power state on HA start-up"
   trigger:
@@ -27,15 +38,3 @@
       data:
         topic: "cmnd/sonoffs/SetOption19"
         payload: "1"
-
-- id: 'sonoff_firmware_installed'
-  alias: Sonoff Firmware Installed
-  trigger:
-  - event: start
-    platform: homeassistant
-  action:
-  - data:
-      payload: '2'
-      topic: sonoffs/cmnd/status
-    service: mqtt.publish
-  initial_state: 'true'
