@@ -1,11 +1,14 @@
 # configuration.yaml
 
 # Turn off lights when everybody leaves the house
-- alias: 'Rule - Away Mode'
+- alias: 'Rule - Away Mode switch light'
   trigger:
     platform: state
-    entity_id: device_tracker
+    entity_id: device_tracker.jirka_iphone
     to: 'not_home'
+  condition:
+    - condition: time
+      before: '08:00:00'
   action:
     service: light.turn_off
     entity_id: group.all_lights

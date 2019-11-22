@@ -11,6 +11,14 @@ person:
     id: jirka
     device_trackers:
       - device_tracker.jirka_iphone
+  - name: lucka
+    id: lucka
+    device_trackers:
+      - device_tracker.iphone_lucka
+  - name: terezka
+    id: terezka
+    device_trackers:
+      - device_tracker.tereza_iphone
 
 # Example configuration.yaml entry
 mikrotik:
