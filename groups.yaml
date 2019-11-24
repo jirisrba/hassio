@@ -1,0 +1,102 @@
+# groups.yaml
+
+home_person:
+  name: Awesome Person
+  entities:
+    - person.jirka
+    - person.lucka
+    - person.terezka
+
+tracked_users:
+  name: tracked_users
+  entities:
+    - device_tracker.jirka_iphone
+    - device_tracker.iphone_lucka
+    - device_tracker.tereza_iphone
+
+bedroom:
+  name: Bedroom
+  entities:
+    - light.kitchen_light
+    - light.bed_light
+    - climate.netatmo_living_room
+    - sensor.netatmo_indoor_temperature
+    - sensor.netatmo_indoor_humidity
+    - sensor.netatmo_indoor_noise
+
+kids_room:
+  name: Kids room
+  entities:
+    - light.kids_light
+    - climate.netatmo_kids_room
+    - sensor.netatmo_pokojicek_health
+    - sensor.netatmo_pokojicek_co2
+    - sensor.netatmo_pokojicek_temperature
+    - sensor.netatmo_pokojicek_humidity
+    - sensor.netatmo_pokojicek_noise
+    - sensor.netatmo_pokojicek_pressure
+
+bathroom:
+  name: Koupelna
+  entities:
+    - climate.netatmo_bathroom
+
+balcony:
+  name: Balkon
+  entities:
+    - sensor.netatmo_outdoor_battery
+    - sensor.netatmo_outdoor_battery_percent
+    - sensor.netatmo_outdoor_humidity
+    - sensor.netatmo_outdoor_temperature
+
+terrarium:
+  name: Akvarko
+  entities:
+    - switch.zelva_uvb
+    - switch.zelva_light
+
+temperature:
+  name: Temperature
+  entities:
+    - sensor.netatmo_outdoor_temperature
+    - sensor.netatmo_indoor_temperature
+    - sensor.netatmo_pokojicek_temperature
+
+power_consumption:
+  name: Power Consumption
+  entities:
+    - sensor.tv_current
+    - sensor.tv_power
+    - sensor.tv_voltage
+
+sonoff_status:
+  name: Sonoff status
+  entities:
+    - sensor.wc_light_wifi_signal
+    - sensor.wc_light
+    - sensor.wc_light_status
+    - sensor.sonoff_mini_wifi_signal
+    - sensor.kids_light
+    - sensor.kids_tv
+    - binary_sensor.wc_light_status
+
+misc_hidden:
+  name: Other
+  control: hidden
+  entities:
+    - climate.netatmo_kotelna
+    - sensor.netatmo_indoor_pressure
+    - sensor.netatmo_indoor_co2
+    - sensor.netatmo_indoor_max_temp
+    - sensor.netatmo_indoor_min_temp
+    - sensor.netatmo_indoor_reachability
+    - sensor.netatmo_indoor_wifi
+    - sensor.netatmo_outdoor_max_temp
+    - sensor.netatmo_outdoor_min_temp
+    - sensor.netatmo_outdoor_reachability
+    - sensor.netatmo_pokojicek_min_temp
+    - sensor.netatmo_pokojicek_max_temp
+    - sensor.netatmo_pokojicek_wifi
+    - sensor.netatmo_outdoor_radio
+    - sensor.netatmo_pokojicek_reachability
+    - binary_sensor.updater

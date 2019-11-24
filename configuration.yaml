@@ -9,6 +9,7 @@ homeassistant:
 person:
   - name: jirka
     id: jirka
+    user_id: 9b636effb9394d9099f8d4d0a36999fd
     device_trackers:
       - device_tracker.jirka_iphone
   - name: lucka
@@ -31,6 +32,12 @@ netatmo:
   secret_key: !secret netatmo_secret_key
   username: !secret netatmo_username
   password: !secret netatmo_password
+
+media_player:
+  - platform: samsungtv
+    host: 192.168.2.30
+    port: 8001
+    name: tv
 
 # Amazon Echo configuration.yaml entry
 emulated_hue:
@@ -82,6 +89,7 @@ discovery:
     - homekit
 
 # iPhone integration
+# disable, umi akorat battery level
 # ios:
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
