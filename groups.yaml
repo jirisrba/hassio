@@ -22,7 +22,6 @@ bedroom:
     - climate.netatmo_living_room
     - sensor.netatmo_indoor_temperature
     - sensor.netatmo_indoor_humidity
-    - sensor.netatmo_indoor_noise
 
 kids_room:
   name: Kids room
@@ -36,10 +35,17 @@ kids_room:
     - sensor.netatmo_pokojicek_noise
     - sensor.netatmo_pokojicek_pressure
 
+hall:
+  name: Hall
+  entities:
+    - light.hall_light
+
 bathroom:
-  name: Koupelna
+  name: Bathroom
   entities:
     - climate.netatmo_bathroom
+    - light.wc_light
+    - switch.wc_fan
 
 balcony:
   name: Balkon
@@ -48,6 +54,9 @@ balcony:
     - sensor.netatmo_outdoor_battery_percent
     - sensor.netatmo_outdoor_humidity
     - sensor.netatmo_outdoor_temperature
+    - sensor.sonoff_pow_christmas_voltage
+    - sensor.sonoff_pow_christmas_current
+    - sensor.sonoff_pow_christmas_power
 
 terrarium:
   name: Akvarko
@@ -65,38 +74,39 @@ temperature:
 power_consumption:
   name: Power Consumption
   entities:
-    - sensor.tv_current
-    - sensor.tv_power
-    - sensor.tv_voltage
+    - sensor.sonoff_pow_christmas_power
 
 sonoff_status:
   name: Sonoff status
   entities:
-    - sensor.wc_light_wifi_signal
-    - sensor.wc_light
-    - sensor.wc_light_status
+    - sensor.sonoff_t1_wc
+    - sensor.sonoff_t1_wc_wifi_signal
     - sensor.sonoff_mini_wifi_signal
     - sensor.kids_light
     - sensor.kids_tv
-    - binary_sensor.wc_light_status
+    - sensor.sonoff_pow_christmas
+    - sensor.sonoff_mini
+    - sensor.sonoff_mini_wifi_signal
+
 
 misc_hidden:
   name: Other
   control: hidden
   entities:
+    - binary_sensor.updater
     - climate.netatmo_kotelna
-    - sensor.netatmo_indoor_pressure
     - sensor.netatmo_indoor_co2
     - sensor.netatmo_indoor_max_temp
     - sensor.netatmo_indoor_min_temp
+    - sensor.netatmo_indoor_noise
+    - sensor.netatmo_indoor_pressure
     - sensor.netatmo_indoor_reachability
     - sensor.netatmo_indoor_wifi
     - sensor.netatmo_outdoor_max_temp
     - sensor.netatmo_outdoor_min_temp
-    - sensor.netatmo_outdoor_reachability
-    - sensor.netatmo_pokojicek_min_temp
-    - sensor.netatmo_pokojicek_max_temp
-    - sensor.netatmo_pokojicek_wifi
     - sensor.netatmo_outdoor_radio
+    - sensor.netatmo_outdoor_reachability
+    - sensor.netatmo_pokojicek_max_temp
+    - sensor.netatmo_pokojicek_min_temp
     - sensor.netatmo_pokojicek_reachability
-    - binary_sensor.updater
+    - sensor.netatmo_pokojicek_wifi

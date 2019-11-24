@@ -7,15 +7,32 @@
     entity_id: group.tracked_users
     to: 'not_home'
     for:
-      minutes: 10
+      minutes: 15
   condition:
     - condition: sun
-      before: sunset
-    - condition: sun
       after: sunrise
+    - condition: sun
+      before: sunset
   action:
     service: light.turn_off
     entity_id: group.all_lights
+
+# turn on Chrismtas light ON
+- alias: christmas_light_ON
+  trigger:
+    platform: sun
+    event: sunset
+  action:
+    service: switch.turn_on
+    entity_id: switch.christmas_light
+
+- alias: christmas_light_OFF
+  trigger:
+    platform: sun
+    event: sunrise
+  action:
+    service: switch.turn_off
+    entity_id: switch.christmas_light
 
 - id: kids_room_light_off
   alias: "Kids room Light Off"
@@ -26,22 +43,22 @@
     - service: light.turn_off
       entity_id: light.kids_light
 
-- alias: "Power state on HA start-up"
-  trigger:
-    platform: homeassistant
-    event: start
-  action:
-    - service: mqtt.publish
-      data:
-        topic: "sonoffs/cmnd/state"
-        payload: ""
+#- alias: "Power state on HA start-up"
+#  trigger:
+#    platform: homeassistant
+#    event: start
+#  action:
+#    - service: mqtt.publish
+#      data:
+#        topic: "sonoffs/cmnd/state"
+#        payload: ""
 
-- alias: "Enable MQTT discovery for all devices"
-  trigger:
-    platform: homeassistant
-    event: start
-  action:
-    - service: mqtt.publish
-      data:
-        topic: "cmnd/sonoffs/SetOption19"
-        payload: "1"
+#- alias: "Enable MQTT discovery for all devices"
+#  trigger:
+#    platform: homeassistant
+#    event: start
+#  action:
+#    - service: mqtt.publish
+#      data:
+#        topic: "cmnd/sonoffs/SetOption19"
+#        payload: "1"

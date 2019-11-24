@@ -39,6 +39,15 @@ media_player:
     port: 8001
     name: tv
 
+# konverze switch na light
+light:
+  - platform: switch
+    name: hall light
+    entity_id: switch.hall_light
+  - platform: switch
+    name: wc light
+    entity_id: switch.wc_light
+
 # Amazon Echo configuration.yaml entry
 emulated_hue:
   host_ip: 192.168.2.4
@@ -54,11 +63,14 @@ emulated_hue:
     light.kids_light:
       name: "Kids light"
       hidden: false
+    light.wc_light:
+      name: "WC light"
+      hidden: false
+    light.hall_light:
+      name: "Hall light"
+      hidden: false
     switch.kids_tv:
       name: "Kids TV"
-      hidden: false
-    switch.wc_light:
-      name: "WC light"
       hidden: false
     group.all_lights:
       name: "All lights"
@@ -99,6 +111,14 @@ discovery:
 # Text to speech
 tts:
   - platform: google_translate
+
+scene:
+  - name: All lights OFF
+    entities:
+      light.bed_light: off
+      light.kitchen_light: off
+      light.wc_light: off
+      light.hall_light: off
 
 group: !include groups.yaml
 automation: !include automations.yaml
