@@ -1,10 +1,12 @@
 homeassistant:
+  name: Domov
   latitude: 50.1576534
   longitude: 14.5168246
   elevation: 225
   unit_system: metric
   time_zone: Europe/Prague
-  name: Domov
+
+  customize: !include customize.yaml
 
 person:
   - name: jirka
@@ -27,6 +29,7 @@ mikrotik:
     username: admin
     password: !secret mikrotik_password
 
+# Configure Netatmo integration
 netatmo:
   api_key: !secret netatmo_api_key
   secret_key: !secret netatmo_secret_key
@@ -53,6 +56,8 @@ emulated_hue:
   host_ip: 192.168.2.4
   listen_port: 80
   expose_by_default: false
+  exposed_domains:
+    - light
   entities:
     light.bed_light:
       name: "Bed light"
@@ -83,12 +88,6 @@ influxdb:
   password: homeassistant
   max_retries: 3
   default_measurement: state
-
-panel_iframe:
-  tasmoadmin:
-    title: TasmoAdmin
-    icon: mdi:lightbulb-on
-    url: http://hassio.local:9541
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:

@@ -1,18 +1,10 @@
 # groups.yaml
 
-home_person:
-  name: Awesome Person
+all_persons:
   entities:
     - person.jirka
     - person.lucka
     - person.terezka
-
-tracked_users:
-  name: tracked_users
-  entities:
-    - device_tracker.jirka_iphone
-    - device_tracker.iphone_lucka
-    - device_tracker.tereza_iphone
 
 bedroom:
   name: Bedroom
@@ -27,13 +19,16 @@ kids_room:
   name: Kids room
   entities:
     - light.kids_light
+    - switch.kids_tv
+    - sensor.sonoff_pow_tv_power
     - climate.netatmo_kids_room
     - sensor.netatmo_pokojicek_health
     - sensor.netatmo_pokojicek_co2
     - sensor.netatmo_pokojicek_temperature
     - sensor.netatmo_pokojicek_humidity
     - sensor.netatmo_pokojicek_noise
-    - sensor.netatmo_pokojicek_pressure
+    - switch.zelva_uvb
+    - switch.zelva_light
 
 hall:
   name: Hall
@@ -54,8 +49,7 @@ balcony:
     - sensor.netatmo_outdoor_battery_percent
     - sensor.netatmo_outdoor_humidity
     - sensor.netatmo_outdoor_temperature
-    - sensor.sonoff_pow_christmas_voltage
-    - sensor.sonoff_pow_christmas_current
+    - switch.christmas_light
     - sensor.sonoff_pow_christmas_power
 
 terrarium:
@@ -75,23 +69,34 @@ power_consumption:
   name: Power Consumption
   entities:
     - sensor.sonoff_pow_christmas_power
+    - sensor.sonoff_pow_christmas_voltage
+    - sensor.sonoff_pow_christmas_current
+    - sensor.sonoff_pow_tv_voltage
+    - sensor.sonoff_pow_tv_current
+    - sensor.sonoff_pow_tv_power
 
 sonoff_status:
   name: Sonoff status
   entities:
     - sensor.sonoff_t1_wc
+    - sensor.sonoff_mini
+    - sensor.sonoff_pow_christmas
+    - sensor.sonoff_pow_tv
+    - sensor.kitchen_light
+    - sensor.sonoff_s20_flower
+
+sonoff_wifi_status:
+  name: Sonoff wifi status
+  entities:
     - sensor.sonoff_t1_wc_wifi_signal
     - sensor.sonoff_mini_wifi_signal
-    - sensor.kids_light
-    - sensor.kids_tv
-    - sensor.sonoff_pow_christmas
-    - sensor.sonoff_mini
     - sensor.sonoff_mini_wifi_signal
+    - sensor.sonoff_pow_tv_wifi_signal
+    - sensor.kitchen_light_wifi_signal
+    - sensor.sonoff_s20_flower_wifi_signal
 
-
-misc_hidden:
-  name: Other
-  control: hidden
+others_hidden:
+  name: Others
   entities:
     - binary_sensor.updater
     - climate.netatmo_kotelna
@@ -110,3 +115,5 @@ misc_hidden:
     - sensor.netatmo_pokojicek_min_temp
     - sensor.netatmo_pokojicek_reachability
     - sensor.netatmo_pokojicek_wifi
+    - sensor.netatmo_pokojicek_pressure
+

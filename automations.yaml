@@ -1,18 +1,16 @@
 # automations.yaml
 
 # Turn off lights when everybody leaves the house
-- alias: 'Rule - Away Mode switch light'
+- alias: 'Away Mode switch light'
   trigger:
     platform: state
-    entity_id: group.tracked_users
+    entity_id: group.all_persons
     to: 'not_home'
     for:
       minutes: 15
   condition:
-    - condition: sun
-      after: sunrise
-    - condition: sun
-      before: sunset
+    condition: time
+    before: '09:00:00'
   action:
     service: light.turn_off
     entity_id: group.all_lights
@@ -28,8 +26,8 @@
 
 - alias: christmas_light_OFF
   trigger:
-    platform: sun
-    event: sunrise
+    platform: time
+    at: "23:00:00"
   action:
     service: switch.turn_off
     entity_id: switch.christmas_light
@@ -37,11 +35,23 @@
 - id: kids_room_light_off
   alias: "Kids room Light Off"
   trigger:
-      at: "20:00:00"
       platform: time
+      at: "20:00:00"
   action:
     - service: light.turn_off
       entity_id: light.kids_light
+
+- alias: "Hall room light Off"
+  trigger:
+      at: "21:00:00"
+      platform: time
+  condition:
+    - condition: state
+      entity_id: light.hall_light
+      state: 'on'
+  action:
+    - service: light.turn_off
+      entity_id: light.hall_light
 
 #- alias: "Power state on HA start-up"
 #  trigger:
