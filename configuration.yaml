@@ -37,10 +37,11 @@ netatmo:
   password: !secret netatmo_password
 
 media_player:
-  - platform: samsungtv
-    host: 192.168.2.30
-    port: 8001
-    name: tv
+  - platform: samsungtv_custom
+    host: 192.168.2.67
+    port: 8002
+    mac: 8C:79:F5:BE:4E:12
+    name: samsung-kids-tv
 
 # konverze switch na light
 light:

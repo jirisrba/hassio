@@ -1,5 +1,16 @@
 # automations.yaml
 
+# samsung TV switch to
+- alias: samsung test
+  trigger:
+    - platform: time
+      at: "7:31:00"
+  action:
+    service: script.tv_channel_decko
+    data:
+      title: 'TV State change'
+      message: 'The CT-D is on!'
+
 # Turn off lights when everybody leaves the house
 - alias: 'Away Mode switch light'
   trigger:

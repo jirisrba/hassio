@@ -91,7 +91,6 @@ sonoff_wifi_status:
     - sensor.sonoff_t1_wc_wifi_signal
     - sensor.sonoff_mini_wifi_signal
     - sensor.sonoff_mini_wifi_signal
-    - sensor.sonoff_pow_tv_wifi_signal
     - sensor.kitchen_light_wifi_signal
     - sensor.sonoff_s20_flower_wifi_signal
 
