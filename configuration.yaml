@@ -1,8 +1,8 @@
 homeassistant:
   name: Domov
-  latitude: 50.1576534
-  longitude: 14.5168246
-  elevation: 225
+  latitude: !secret home_lat
+  longitude: !secret home_long
+  elevation: !secret home_alt
   unit_system: metric
   time_zone: Europe/Prague
 
@@ -36,14 +36,16 @@ netatmo:
   username: !secret netatmo_username
   password: !secret netatmo_password
 
-media_player:
-  - platform: samsungtv_custom
-    host: 192.168.2.67
-    port: 8002
-    mac: 8C:79:F5:BE:4E:12
-    name: samsung-kids-tv
+# https://github.com/roberodin/ha-samsungtv-custom
+#media_player:
+#  - platform: samsungtv_custom
+#    host: 192.168.2.67
+#    port: 8002
+#    mac: 8C:79:F5:BE:4E:12
+#    name: samsung-kids-tv
+#    protocol: ws
 
-# konverze switch na light
+# convert switch to light
 light:
   - platform: switch
     name: hall light
@@ -81,6 +83,13 @@ emulated_hue:
     group.all_lights:
       name: "All lights"
 
+# HomeKit integration
+homekit:
+  filter:
+    include_domains:
+      - light
+      - media_player
+
 influxdb:
   host: a0d7b954-influxdb
   port: 8086
@@ -89,6 +98,18 @@ influxdb:
   password: homeassistant
   max_retries: 3
   default_measurement: state
+  include:
+    domains:
+      - sensor
+  exclude:
+    entities:
+      - sensor.netatmo_indoor_co2
+      - sensor.netatmo_indoor_max_temp
+      - sensor.netatmo_indoor_min_temp
+      - sensor.netatmo_outdoor_max_temp
+      - sensor.netatmo_outdoor_min_temp
+      - sensor.netatmo_pokojicek_max_temp
+      - sensor.netatmo_pokojicek_min_temp
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:

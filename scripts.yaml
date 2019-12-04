@@ -21,3 +21,7 @@ tv_channel_decko:
         entity_id: media_player.samsung_kids_tv
         media_content_type: "channel"
         media_content_id: 31
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.samsung_kids_tv
+        volume_level: 0.3

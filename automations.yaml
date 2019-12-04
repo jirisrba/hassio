@@ -1,10 +1,10 @@
 # automations.yaml
 
 # samsung TV switch to
-- alias: samsung test
+- alias: samsung switch channel
   trigger:
     - platform: time
-      at: "7:31:00"
+      at: "06:31:00"
   action:
     service: script.tv_channel_decko
     data:
@@ -26,7 +26,7 @@
     service: light.turn_off
     entity_id: group.all_lights
 
-# turn on Chrismtas light ON
+# Christmas light ON/OFF
 - alias: christmas_light_ON
   trigger:
     platform: sun
@@ -43,15 +43,21 @@
     service: switch.turn_off
     entity_id: switch.christmas_light
 
+# Kids room light OFF
 - id: kids_room_light_off
   alias: "Kids room Light Off"
   trigger:
       platform: time
       at: "20:00:00"
+  condition:
+    - condition: state
+      entity_id: light.kids_light
+      state: 'on'
   action:
     - service: light.turn_off
       entity_id: light.kids_light
 
+# Hall room light OFF
 - alias: "Hall room light Off"
   trigger:
       at: "21:00:00"
