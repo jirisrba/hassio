@@ -27,8 +27,6 @@ kids_room:
     - sensor.netatmo_pokojicek_temperature
     - sensor.netatmo_pokojicek_humidity
     - sensor.netatmo_pokojicek_noise
-    - switch.zelva_uvb
-    - switch.zelva_light
 
 hall:
   name: Hall
@@ -49,14 +47,17 @@ balcony:
     - sensor.netatmo_outdoor_battery_percent
     - sensor.netatmo_outdoor_humidity
     - sensor.netatmo_outdoor_temperature
-    - switch.christmas_light
-    - sensor.sonoff_pow_christmas_power
+    # - switch.christmas_light
+    # - sensor.sonoff_pow_christmas_power
 
 terrarium:
   name: Akvarko
   entities:
     - switch.zelva_uvb
-    - switch.zelva_light
+    - light.zelva_teplo
+    - sensor.zelva_left_temperature
+    - sensor.zelva_right_temperature
+    - sensor.zelva_humidity
 
 temperature:
   name: Temperature
@@ -65,14 +66,14 @@ temperature:
     - sensor.netatmo_indoor_temperature
     - sensor.netatmo_pokojicek_temperature
     - sensor.sonoff_pow_tv_temperature
-    - sensor.sonoff_pow_christmas_temperature
+    # - sensor.sonoff_pow_christmas_temperature
 
 power_consumption:
   name: Power Consumption
   entities:
-    - sensor.sonoff_pow_christmas_power
-    - sensor.sonoff_pow_christmas_voltage
-    - sensor.sonoff_pow_christmas_current
+    # - sensor.sonoff_pow_christmas_power
+    # - sensor.sonoff_pow_christmas_voltage
+    # - sensor.sonoff_pow_christmas_current
     - sensor.sonoff_pow_tv_voltage
     - sensor.sonoff_pow_tv_current
     - sensor.sonoff_pow_tv_power
@@ -82,10 +83,11 @@ sonoff_status:
   entities:
     - sensor.sonoff_t1_wc
     - sensor.sonoff_mini
-    - sensor.sonoff_pow_christmas
+    # - sensor.sonoff_pow_christmas
     - sensor.sonoff_pow_tv
     - sensor.kitchen_light
     - sensor.sonoff_s20_flower
+    - sensor.tuya_dimmer
 
 sonoff_wifi_status:
   name: Sonoff wifi status
@@ -117,4 +119,3 @@ others_hidden:
     - sensor.netatmo_pokojicek_reachability
     - sensor.netatmo_pokojicek_wifi
     - sensor.netatmo_pokojicek_pressure
-
