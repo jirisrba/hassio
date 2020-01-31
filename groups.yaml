@@ -6,16 +6,6 @@ all_persons:
     - person.lucka
     - person.terezka
 
-balcony:
-  name: Balkon
-  entities:
-    - sensor.netatmo_outdoor_battery
-    - sensor.netatmo_outdoor_battery_percent
-    - sensor.netatmo_outdoor_humidity
-    - sensor.netatmo_outdoor_temperature
-    # - switch.christmas_light
-    # - sensor.sonoff_pow_christmas_power
-
 temperature:
   name: Temperature
   entities:
@@ -23,24 +13,17 @@ temperature:
     - sensor.netatmo_indoor_temperature
     - sensor.netatmo_pokojicek_temperature
     - sensor.sonoff_pow_tv_temperature
-    # - sensor.sonoff_pow_christmas_temperature
-
-power_consumption:
-  name: Power Consumption
-  entities:
-    # - sensor.sonoff_pow_christmas_power
-    # - sensor.sonoff_pow_christmas_voltage
-    # - sensor.sonoff_pow_christmas_current
-    - sensor.sonoff_pow_tv_voltage
-    - sensor.sonoff_pow_tv_current
-    - sensor.sonoff_pow_tv_power
+    - sensor.zelva_left_temperature
+    - sensor.zelva_right_temperature
+    - sensor.zelva_humidity
+    - sensor.sonoff_pow_tv_temperature
+    - sensor.sonoff_pow_tv_humidity
 
 sonoff_status:
   name: Sonoff status
   entities:
     - sensor.sonoff_t1_wc
     - sensor.sonoff_mini
-    # - sensor.sonoff_pow_christmas
     - sensor.sonoff_pow_tv
     - sensor.kitchen_light
     - sensor.sonoff_s20_flower
