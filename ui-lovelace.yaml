@@ -1,0 +1,186 @@
+title: Domov
+views:
+  - path: default_view
+    title: Home
+    badges:
+      - entity: device_tracker.iphone_lucka
+      - entity: device_tracker.jirka_iphone
+      - entity: device_tracker.tereza_iphone
+      - entity: device_tracker.esp32
+      - entity: device_tracker.jiri_ipad
+      - entity: device_tracker.hpf439095d57f6
+      - entity: sun.sun
+    cards:
+      - type: entities
+        entities:
+          - light.kitchen_light
+          - light.bed_light
+          - sensor.kitchen_light_wifi_signal
+          - sensor.kitchen_light
+          - sensor.sonoff_s20_flower_wifi_signal
+          - sensor.sonoff_s20_flower
+          - switch.flower
+          - device_tracker.jirka_iphone_2
+          - sensor.activity
+          - sensor.battery_level
+          - sensor.battery_state
+          - sensor.average_active_pace
+          - sensor.floors_ascended
+          - sensor.distance
+          - sensor.floors_descended
+          - sensor.steps
+          - sensor.bssid
+          - sensor.connection_type
+          - sensor.ssid
+          - sensor.sim_1
+          - sensor.last_update_trigger
+          - sensor.geocoded_location
+          - climate.netatmo_living_room
+          - sensor.netatmo_indoor_temperature
+          - sensor.netatmo_indoor_humidity
+        title: Bedroom
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - sensor.wc_light
+          - sensor.kids_light_wifi_signal
+          - sensor.kids_light
+          - light.kids_light
+          - switch.zelva_uvb
+          - sensor.sonoff_pow_tv_voltage
+          - sensor.sonoff_pow_tv_current
+          - sensor.sonoff_pow_tv_power
+          - sensor.sonoff_pow_tv
+          - switch.kids_tv
+          - sensor.sonoff_pow_tv_pressure
+          - sensor.sonoff_pow_tv_temperature
+          - sensor.sonoff_pow_tv_humidity
+          - sensor.zelva_right_temperature
+          - sensor.zelva_humidity
+          - sensor.zelva_left_temperature
+          - sensor.d1_mini
+          - climate.netatmo_kids_room
+          - sensor.netatmo_pokojicek_health
+          - sensor.netatmo_pokojicek_co2
+          - sensor.netatmo_pokojicek_temperature
+          - sensor.netatmo_pokojicek_humidity
+          - sensor.netatmo_pokojicek_noise
+        title: Kids room
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - person.jirka
+          - person.lucka
+          - person.terezka
+        title: all_persons
+        show_header_toggle: true
+      - type: thermostat
+        entity: climate.netatmo_living_room
+        show_header_toggle: true
+      - type: thermostat
+        entity: climate.netatmo_kids_room
+      - type: entities
+        entities:
+          - light.hall_light
+        title: Hall
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - climate.netatmo_bathroom
+          - light.wc_light
+          - switch.wc_fan
+        title: Bathroom
+        show_header_toggle: true
+      - type: thermostat
+        entity: climate.netatmo_bathroom
+      - type: entities
+        entities:
+          - sensor.netatmo_outdoor_battery
+          - sensor.netatmo_outdoor_battery_percent
+          - sensor.netatmo_outdoor_humidity
+          - sensor.netatmo_outdoor_temperature
+        title: Balkon
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - switch.zelva_uvb
+          - light.zelva_teplo
+          - sensor.zelva_left_temperature
+          - sensor.zelva_right_temperature
+          - sensor.zelva_humidity
+        title: Akvarko
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - sensor.netatmo_outdoor_temperature
+          - sensor.netatmo_indoor_temperature
+          - sensor.netatmo_pokojicek_temperature
+          - sensor.sonoff_pow_tv_temperature
+        title: Temperature
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - sensor.sonoff_pow_tv_voltage
+          - sensor.sonoff_pow_tv_current
+          - sensor.sonoff_pow_tv_power
+        title: Power Consumption
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - sensor.sonoff_t1_wc
+          - sensor.sonoff_mini
+          - sensor.sonoff_pow_tv
+          - sensor.kitchen_light
+          - sensor.sonoff_s20_flower
+          - sensor.tuya_dimmer
+        title: Sonoff status
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - sensor.sonoff_t1_wc_wifi_signal
+          - sensor.sonoff_mini_wifi_signal
+          - sensor.sonoff_mini_wifi_signal
+          - sensor.kitchen_light_wifi_signal
+          - sensor.sonoff_s20_flower_wifi_signal
+        title: Sonoff wifi status
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - binary_sensor.updater
+          - sensor.netatmo_indoor_co2
+          - sensor.netatmo_indoor_max_temp
+          - sensor.netatmo_indoor_min_temp
+          - sensor.netatmo_indoor_noise
+          - sensor.netatmo_indoor_pressure
+          - sensor.netatmo_indoor_reachability
+          - sensor.netatmo_indoor_wifi
+          - sensor.netatmo_outdoor_max_temp
+          - sensor.netatmo_outdoor_min_temp
+          - sensor.netatmo_outdoor_radio
+          - sensor.netatmo_outdoor_reachability
+          - sensor.netatmo_pokojicek_max_temp
+          - sensor.netatmo_pokojicek_min_temp
+          - sensor.netatmo_pokojicek_reachability
+          - sensor.netatmo_pokojicek_wifi
+          - sensor.netatmo_pokojicek_pressure
+        title: Others
+        show_header_toggle: true
+      - type: thermostat
+        entity: climate.netatmo_kotelna
+      - type: entities
+        entities:
+          - automation.samsung_switch_channel
+          - automation.away_mode_switch_light
+          - automation.kids_room_light_off
+          - automation.hall_room_light_off
+        title: Automatizace
+      - type: entities
+        entities:
+          - scene.all_lights_off
+        title: Scéna
+      - type: entities
+        entities:
+          - script.tv_channel_decko
+        title: Skript
+      - type: weather-forecast
+        entity: weather.domov

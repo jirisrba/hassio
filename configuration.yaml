@@ -5,8 +5,10 @@ homeassistant:
   elevation: !secret home_alt
   unit_system: metric
   time_zone: Europe/Prague
-
   customize: !include customize.yaml
+
+lovelace:
+  mode: yaml
 
 person:
   - name: jirka

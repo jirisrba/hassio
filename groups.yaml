@@ -6,40 +6,6 @@ all_persons:
     - person.lucka
     - person.terezka
 
-bedroom:
-  name: Bedroom
-  entities:
-    - light.kitchen_light
-    - light.bed_light
-    - climate.netatmo_living_room
-    - sensor.netatmo_indoor_temperature
-    - sensor.netatmo_indoor_humidity
-
-kids_room:
-  name: Kids room
-  entities:
-    - light.kids_light
-    - switch.kids_tv
-    - sensor.sonoff_pow_tv_power
-    - climate.netatmo_kids_room
-    - sensor.netatmo_pokojicek_health
-    - sensor.netatmo_pokojicek_co2
-    - sensor.netatmo_pokojicek_temperature
-    - sensor.netatmo_pokojicek_humidity
-    - sensor.netatmo_pokojicek_noise
-
-hall:
-  name: Hall
-  entities:
-    - light.hall_light
-
-bathroom:
-  name: Bathroom
-  entities:
-    - climate.netatmo_bathroom
-    - light.wc_light
-    - switch.wc_fan
-
 balcony:
   name: Balkon
   entities:
@@ -49,15 +15,6 @@ balcony:
     - sensor.netatmo_outdoor_temperature
     # - switch.christmas_light
     # - sensor.sonoff_pow_christmas_power
-
-terrarium:
-  name: Akvarko
-  entities:
-    - switch.zelva_uvb
-    - light.zelva_teplo
-    - sensor.zelva_left_temperature
-    - sensor.zelva_right_temperature
-    - sensor.zelva_humidity
 
 temperature:
   name: Temperature
