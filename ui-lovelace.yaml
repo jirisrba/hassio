@@ -11,7 +11,6 @@ views:
           - sensor.netatmo_pokojicek_temperature
           - sensor.sonoff_pow_tv_temperature
           - sensor.zelva_left_temperature
-          - sensor.zelva_right_temperature
       - type: entities
         entities:
           - light.kitchen_light
@@ -22,25 +21,22 @@ views:
           - sensor.netatmo_indoor_humidity
         title: Bedroom
         show_header_toggle: true
+
       - type: entities
+        title: Kids room
+        show_header_toggle: true
         entities:
           - light.kids_light
-          - switch.zelva_uvb
           - switch.kids_tv
           - sensor.sonoff_pow_tv_power
           - sensor.sonoff_pow_tv_temperature
           - sensor.sonoff_pow_tv_humidity
-          - sensor.zelva_right_temperature
-          - sensor.zelva_left_temperature
-          - sensor.zelva_humidity
           - climate.netatmo_kids_room
           - sensor.netatmo_pokojicek_health
           - sensor.netatmo_pokojicek_co2
           - sensor.netatmo_pokojicek_temperature
           - sensor.netatmo_pokojicek_humidity
           - sensor.netatmo_pokojicek_noise
-        title: Kids room
-        show_header_toggle: true
 
       - type: entities
         entities:
@@ -76,14 +72,14 @@ views:
         show_header_toggle: true
 
       - type: entities
+        title: Akvarko
+        show_header_toggle: true
         entities:
           - switch.zelva_uvb
           - light.zelva_teplo
           - sensor.zelva_left_temperature
           - sensor.zelva_right_temperature
           - sensor.zelva_humidity
-        title: Akvarko
-        show_header_toggle: true
 
       - type: thermostat
         entity: climate.netatmo_kotelna
