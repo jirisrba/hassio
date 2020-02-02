@@ -11,6 +11,7 @@ views:
           - sensor.netatmo_pokojicek_temperature
           - sensor.sonoff_pow_tv_temperature
           - sensor.zelva_left_temperature
+
       - type: entities
         entities:
           - light.kitchen_light
@@ -81,22 +82,18 @@ views:
           - sensor.zelva_right_temperature
           - sensor.zelva_humidity
 
-      - type: thermostat
-        entity: climate.netatmo_kotelna
-      - type: thermostat
-        entity: climate.netatmo_bathroom
-      - type: thermostat
-        entity: climate.netatmo_living_room
-      - type: thermostat
-        entity: climate.netatmo_kids_room
+      - type: light
+        entity: light.zelva_teplo
+        name: Zelva teplo
 
       - type: entities
+        title: Automatizace
         entities:
           - automation.samsung_switch_channel
           - automation.away_mode_switch_light
           - automation.kids_room_light_off
           - automation.hall_room_light_off
-        title: Automatizace
+
       - type: entities
         entities:
           - scene.all_lights_off
@@ -105,5 +102,6 @@ views:
         entities:
           - script.tv_channel_decko
         title: Skript
+
       - type: weather-forecast
         entity: weather.domov
