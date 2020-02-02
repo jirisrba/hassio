@@ -24,7 +24,9 @@
       brightness: >
         {% set temp = states('sensor.zelva_right_temperature')|float %}
         {% if temp < 32 %} 255
-        {% elif temp < 34 %} 100
+        {% elif temp < 33 %} 200
+        {% elif temp < 34 %} 150
+        {% elif temp < 35 %} 100
         {% else %} 16
         {% endif %}
 

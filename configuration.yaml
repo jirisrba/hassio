@@ -103,6 +103,8 @@ influxdb:
   include:
     domains:
       - sensor
+    entities:
+      - light.zelva_teplo
   exclude:
     entities:
       - sensor.netatmo_indoor_co2
