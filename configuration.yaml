@@ -125,6 +125,27 @@ discovery:
   enable:
     - homekit
 
+#climate:
+#  - platform: generic_thermostat
+#    name: zelva_thermostat
+#    heater: light.zelva_teplo
+#    target_sensor: sensor.zelva_right_temperature
+#    min_temp: 22
+#    max_temp: 30
+#    ac_mode: False
+#    target_temp: 26
+#    keep_alive:
+#      seconds: 5
+#    initial_operation_mode: "off"
+#    away_temp: 16
+#    kp : 5
+#    ki : 3
+#    kd : 2
+#    pwm : 10
+#    autotune : ziegler-nichols
+#    difference : 100
+#    noiseband : 0.5
+
 # iPhone integration
 # disable, umi akorat battery level
 # ios:
