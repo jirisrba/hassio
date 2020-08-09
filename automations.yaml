@@ -33,15 +33,16 @@
         {% endif %}
 
 # samsung TV switch to
-- alias: samsung switch channel
-  trigger:
-    - platform: time
-      at: "06:31:00"
-  action:
-    service: script.tv_channel_decko
-    data:
-      title: 'TV State change'
-      message: 'The CT-D is on!'
+# TODO
+# - alias: samsung switch channel
+#   trigger:
+#     - platform: time
+#       at: "06:31:00"
+#   action:
+#     service: script.tv_channel_decko
+#     data:
+#       title: 'TV State change'
+#       message: 'The CT-D is on!'
 
 # Turn off lights when everybody leaves the house
 - alias: 'Away Mode switch light'
@@ -92,7 +93,7 @@
 # Hall room light OFF
 - alias: "Hall room light Off"
   trigger:
-      at: "21:00:00"
+      at: "22:00:00"
       platform: time
   condition:
     - condition: state
