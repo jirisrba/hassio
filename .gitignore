@@ -7,6 +7,9 @@
 !.gitignore
 !*.md
 
+# ssh private key
+core_git_pull.yaml
+
 # Ignore folders.
 .storage
 .cloud
