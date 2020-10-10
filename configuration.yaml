@@ -107,11 +107,6 @@ influxdb:
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
-# Example configuration.yaml entry
-discovery:
-  enable:
-    - homekit
-
 # Text to speech
 tts:
   - platform: google_translate
