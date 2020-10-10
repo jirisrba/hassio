@@ -15,15 +15,15 @@ person:
     id: jirka
     user_id: 9b636effb9394d9099f8d4d0a36999fd
     device_trackers:
-      - device_tracker.jirka_iphone
+      - device_tracker.jirka
   - name: lucka
     id: lucka
     device_trackers:
-      - device_tracker.iphone_lucka
+      - device_tracker.jirka_iphone_2
   - name: terezka
     id: terezka
     device_trackers:
-      - device_tracker.tereza_iphone
+      - device_tracker.tereza_iphone_2
 
 # Example configuration.yaml entry
 mikrotik:
@@ -33,19 +33,8 @@ mikrotik:
 
 # Configure Netatmo integration
 netatmo:
-  api_key: !secret netatmo_api_key
-  secret_key: !secret netatmo_secret_key
-  username: !secret netatmo_username
-  password: !secret netatmo_password
-
-# https://github.com/roberodin/ha-samsungtv-custom
-#media_player:
-#  - platform: samsungtv_custom
-#    host: 192.168.2.67
-#    port: 8002
-#    mac: 8C:79:F5:BE:4E:12
-#    name: samsung-kids-tv
-#    protocol: ws
+  client_id: !secret netatmo_api_key
+  client_secret: !secret netatmo_secret_key
 
 # convert switch to light
 light:
@@ -120,39 +109,8 @@ default_config:
 
 # Example configuration.yaml entry
 discovery:
-  ignore:
-    - samsung_tv
   enable:
     - homekit
-
-#climate:
-#  - platform: generic_thermostat
-#    name: zelva_thermostat
-#    heater: light.zelva_teplo
-#    target_sensor: sensor.zelva_right_temperature
-#    min_temp: 22
-#    max_temp: 30
-#    ac_mode: False
-#    target_temp: 26
-#    keep_alive:
-#      seconds: 5
-#    initial_operation_mode: "off"
-#    away_temp: 16
-#    kp : 5
-#    ki : 3
-#    kd : 2
-#    pwm : 10
-#    autotune : ziegler-nichols
-#    difference : 100
-#    noiseband : 0.5
-
-# iPhone integration
-# disable, umi akorat battery level
-# ios:
-
-# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-# http:
-#   base_url: example.duckdns.org:8123
 
 # Text to speech
 tts:

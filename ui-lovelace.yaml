@@ -13,6 +13,7 @@ views:
           - sensor.zelva_left_temperature
 
       - type: entities
+        title: Bedroom
         entities:
           - light.kitchen_light
           - light.bed_light
@@ -20,7 +21,6 @@ views:
           - climate.netatmo_living_room
           - sensor.netatmo_indoor_temperature
           - sensor.netatmo_indoor_humidity
-        title: Bedroom
         show_header_toggle: true
 
       - type: entities
@@ -40,6 +40,7 @@ views:
           - sensor.netatmo_pokojicek_noise
 
       - type: entities
+        title: all_persons
         entities:
           - person.jirka
           - person.lucka
@@ -47,37 +48,37 @@ views:
           - device_tracker.iphone_lucka
           - device_tracker.jirka_iphone
           - device_tracker.tereza_iphone
-        title: all_persons
         show_header_toggle: true
 
       - type: entities
+        title: Hall
         entities:
           - light.hall_light
-        title: Hall
         show_header_toggle: true
+
       - type: entities
+        title: Bathroom
         entities:
           - climate.netatmo_bathroom
           - light.wc_light
           - switch.wc_fan
-        title: Bathroom
         show_header_toggle: true
 
       - type: entities
+        title: Balkon
         entities:
           - sensor.netatmo_outdoor_battery
           - sensor.netatmo_outdoor_battery_percent
           - sensor.netatmo_outdoor_humidity
           - sensor.netatmo_outdoor_temperature
-        title: Balkon
         show_header_toggle: true
 
       - type: entities
         title: Akvarko
         show_header_toggle: true
         entities:
-          - switch.zelva_uvb
-          - light.zelva_teplo
+          - switch.emmet
+          - switch.dortik
           - sensor.zelva_left_temperature
           - sensor.zelva_right_temperature
           - sensor.zelva_humidity
