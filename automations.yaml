@@ -1,36 +1,36 @@
 # automations.yaml
 
 # akvarko dimmer PID regulace teploty
-- alias: zelva heatlamp
-  trigger:
-    - platform: state
-      entity_id: sensor.zelva_right_temperature
-  condition:
-      condition: and
-      conditions:
-        - condition: state
-          entity_id: light.zelva_teplo
-          state: 'on'
-        #- condition: time
-        #  after: '10:00:00'
-        #  before: '18:00:00'
-        #- condition: numeric_state
-        #  entity_id: sensor.zelva_right_temperature
-        #  above: 30
-  action:
-    service: light.turn_on
-    entity_id: light.zelva_teplo
-    data_template:
-      # decrease brightness with increasing temp
-      # PID nastaven na stred teploty 28
-      brightness: >
-        {% set target_temp = 28 %}
-        {% set max_temp = target_temp + 4 %}
-        {% set current_temp = states('sensor.zelva_right_temperature')|float %}
-        {% if current_temp < target_temp - 4 %}255
-        {% elif current_temp < max_temp %}{{ ((max_temp - current_temp) * (256/8))|int }}
-        {% else %} 16
-        {% endif %}
+#- alias: zelva heatlamp
+#  trigger:
+#    - platform: state
+#      entity_id: sensor.zelva_right_temperature
+#  condition:
+#      condition: and
+#      conditions:
+#        - condition: state
+#          entity_id: light.zelva_teplo
+#          state: 'on'
+#        #- condition: time
+#        #  after: '10:00:00'
+#        #  before: '18:00:00'
+#        #- condition: numeric_state
+#        #  entity_id: sensor.zelva_right_temperature
+#        #  above: 30
+#  action:
+#    service: light.turn_on
+#    entity_id: light.zelva_teplo
+#    data_template:
+#      # decrease brightness with increasing temp
+#      # PID nastaven na stred teploty 28
+#      brightness: >
+#        {% set target_temp = 28 %}
+#        {% set max_temp = target_temp + 4 %}
+#        {% set current_temp = states('sensor.zelva_right_temperature')|float %}
+#        {% if current_temp < target_temp - 4 %}255
+#        {% elif current_temp < max_temp %}{{ ((max_temp - current_temp) * (256/8))|int }}
+#        {% else %} 16
+#        {% endif %}
 
 # samsung TV switch to
 # TODO
