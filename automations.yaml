@@ -1,5 +1,27 @@
 # automations.yaml
 
+# Akvarko light ON
+- alias: "Akvarko light ON"
+  trigger:
+      at: "10:00:00"
+      platform: time
+  action:
+    - service: switch.turn_on
+      entity_id: switch.emmet
+    - service: switch.turn_on
+      entity_id: switch.dortik
+
+# Akvarko light OFF
+- alias: "Akvarko light OFF"
+  trigger:
+      at: "16:00:00"
+      platform: time
+  action:
+    - service: switch.turn_off
+      entity_id: switch.emmet
+    - service: switch.turn_off
+      entity_id: switch.dortik
+
 # akvarko dimmer PID regulace teploty
 #- alias: zelva heatlamp
 #  trigger:
