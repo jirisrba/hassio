@@ -27,10 +27,6 @@ views:
         show_header_toggle: true
         entities:
           - light.kids_light
-          - switch.kids_tv
-          - sensor.sonoff_pow_tv_power
-          - sensor.sonoff_pow_tv_temperature
-          - sensor.sonoff_pow_tv_humidity
           - sensor.netatmo_pokojicek_health
           - sensor.netatmo_pokojicek_co2
           - sensor.netatmo_pokojicek_temperature
@@ -77,13 +73,6 @@ views:
         entities:
           - switch.emmet
           - switch.dortik
-          - sensor.zelva_left_temperature
-          - sensor.zelva_right_temperature
-          - sensor.zelva_humidity
-
-      - type: light
-        entity: light.zelva_teplo
-        name: Zelva teplo
 
       - type: entities
         title: Automatizace
@@ -96,10 +85,6 @@ views:
         entities:
           - scene.all_lights_off
         title: Scéna
-      - type: entities
-        entities:
-          - script.tv_channel_decko
-        title: Skript
 
       - type: weather-forecast
         entity: weather.domov
