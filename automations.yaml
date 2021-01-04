@@ -81,23 +81,6 @@
     service: light.turn_off
     entity_id: group.all_lights
 
-# Christmas light ON/OFF
-- alias: christmas_light_on
-  trigger:
-    platform: sun
-    event: sunset
-  action:
-    service: switch.turn_on
-    entity_id: switch.christmas_balkon
-
-- alias: christmas_light_off
-  trigger:
-    platform: time
-    at: "22:00:00"
-  action:
-    service: switch.turn_off
-    entity_id: switch.christmas_balkon
-
 # Kids room light OFF
 - id: kids_room_light_off
   alias: "Kids room Light Off"
@@ -124,6 +107,23 @@
   action:
     - service: light.turn_off
       entity_id: light.hall_light
+
+# Christmas light ON/OFF
+#- alias: christmas_light_on
+#  trigger:
+#    platform: sun
+#    event: sunset
+#  action:
+#    service: switch.turn_on
+#    entity_id: switch.christmas_balkon
+#
+#- alias: christmas_light_off
+#  trigger:
+#    platform: time
+#    at: "22:00:00"
+#  action:
+#    service: switch.turn_off
+#    entity_id: switch.christmas_balkon
 
 #- alias: "Power state on HA start-up"
 #  trigger:
