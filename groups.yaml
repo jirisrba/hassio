@@ -5,19 +5,12 @@ all_persons:
     - person.jirka
     - person.lucka
     - person.terezka
+    - person.tomik
 
 temperature:
   name: Temperature
   entities:
-    - sensor.netatmo_outdoor_temperature
-    - sensor.netatmo_indoor_temperature
     - sensor.netatmo_pokojicek_temperature
-    - sensor.sonoff_pow_tv_temperature
-    - sensor.zelva_left_temperature
-    - sensor.zelva_right_temperature
-    - sensor.zelva_humidity
-    - sensor.sonoff_pow_tv_temperature
-    - sensor.sonoff_pow_tv_humidity
 
 sonoff_status:
   name: Sonoff status
@@ -27,7 +20,6 @@ sonoff_status:
     - sensor.sonoff_pow_tv
     - sensor.kitchen_light
     - sensor.sonoff_s20_flower
-    - sensor.tuya_dimmer
 
 sonoff_wifi_status:
   name: Sonoff wifi status

@@ -6,11 +6,10 @@ views:
       - entity: sun.sun
     cards:
       - type: history-graph
-        title: 'Kids temperature'
+        title: "Kids temperature"
         entities:
           - sensor.netatmo_pokojicek_temperature
           - sensor.sonoff_pow_tv_temperature
-          - sensor.zelva_left_temperature
 
       - type: entities
         title: Bedroom
@@ -18,8 +17,6 @@ views:
           - light.kitchen_light
           - light.bed_light
           - switch.flower
-          - sensor.netatmo_indoor_temperature
-          - sensor.netatmo_indoor_humidity
         show_header_toggle: true
 
       - type: entities
@@ -45,12 +42,6 @@ views:
         show_header_toggle: true
 
       - type: entities
-        title: Hall
-        entities:
-          - light.hall_light
-        show_header_toggle: true
-
-      - type: entities
         title: Bathroom
         entities:
           - light.wc_light
@@ -61,25 +52,13 @@ views:
         title: Balkon
         entities:
           - switch.christmas_balkon
-          - sensor.netatmo_outdoor_battery
-          - sensor.netatmo_outdoor_battery_percent
-          - sensor.netatmo_outdoor_humidity
-          - sensor.netatmo_outdoor_temperature
         show_header_toggle: true
-
-      - type: entities
-        title: Akvarko
-        show_header_toggle: true
-        entities:
-          - switch.emmet
-          - switch.dortik
 
       - type: entities
         title: Automatizace
         entities:
           - automation.away_mode_switch_light
           - automation.kids_room_light_off
-          - automation.hall_room_light_off
 
       - type: entities
         entities:
