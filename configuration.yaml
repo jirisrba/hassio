@@ -31,11 +31,6 @@ mikrotik:
     username: homeassistant
     password: homeassistant
 
-# Configure Netatmo integration
-netatmo:
-  client_id: !secret netatmo_api_key
-  client_secret: !secret netatmo_secret_key
-
 # convert switch to light
 light:
   - platform: switch
@@ -86,17 +81,16 @@ influxdb:
   include:
     domains:
       - sensor
-    entities:
-      - light.zelva_teplo
-  exclude:
-    entities:
-      - sensor.netatmo_indoor_co2
-      - sensor.netatmo_indoor_max_temp
-      - sensor.netatmo_indoor_min_temp
-      - sensor.netatmo_outdoor_max_temp
-      - sensor.netatmo_outdoor_min_temp
-      - sensor.netatmo_pokojicek_max_temp
-      - sensor.netatmo_pokojicek_min_temp
+
+# Xiomi temperature
+ble_monitor:
+  devices:
+    - mac: "A4:C1:38:6C:60:9F"
+      name: "Kids Room Temp"
+      encryption_key: "b5d252328a71e89ec992b80ddab04ed1"
+    - mac: "A4:C1:38:47:B6:BC"
+      name: "Living Room Temp"
+      encryption_key: "adbbba3b9a996f0db4ce40db53911b14"
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
@@ -111,7 +105,6 @@ scene:
       light.bed_light: off
       light.kitchen_light: off
       light.wc_light: off
-      light.hall_light: off
 
 group: !include groups.yaml
 automation: !include automations.yaml

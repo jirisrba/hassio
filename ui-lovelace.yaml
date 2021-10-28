@@ -8,15 +8,17 @@ views:
       - type: history-graph
         title: "Kids temperature"
         entities:
-          - sensor.netatmo_pokojicek_temperature
-          - sensor.sonoff_pow_tv_temperature
+          - sensor.ble_temperature_kids_room_temp
+          - sensor.ble_temperature_living_room_temp
 
       - type: entities
         title: Bedroom
         entities:
           - light.kitchen_light
           - light.bed_light
-          - switch.flower
+          - sensor.ble_temperature_kids_room_temp
+          - sensor.ble_humidity_kids_room_temp
+
         show_header_toggle: true
 
       - type: entities
@@ -24,11 +26,8 @@ views:
         show_header_toggle: true
         entities:
           - light.kids_light
-          - sensor.netatmo_pokojicek_health
-          - sensor.netatmo_pokojicek_co2
-          - sensor.netatmo_pokojicek_temperature
-          - sensor.netatmo_pokojicek_humidity
-          - sensor.netatmo_pokojicek_noise
+          - sensor.ble_temperature_living_room_temp
+          - sensor.ble_humidity_living_room_temp
 
       - type: entities
         title: all_persons
@@ -51,7 +50,7 @@ views:
       - type: entities
         title: Balkon
         entities:
-          - switch.christmas_balkon
+          - switch.flower
         show_header_toggle: true
 
       - type: entities
