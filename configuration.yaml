@@ -95,10 +95,6 @@ ble_monitor:
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
-# Text to speech
-tts:
-  - platform: google_translate
-
 scene:
   - name: All lights OFF
     entities:

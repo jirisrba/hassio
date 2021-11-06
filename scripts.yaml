@@ -1,27 +1,27 @@
 # scripts.yaml
 
 # TV Samsung set channel to 31
-tv_channel_decko:
-  alias: TV Channel Decko
-  sequence:
-    - service: switch.turn_on
-      data:
-        entity_id: switch.kids_tv
-    - delay:
-        seconds: 5
-    - service: media_player.play_media
-      data:
-        entity_id: media_player.samsung_kids_tv
-        media_content_type: "send_key"
-        media_content_id: "KEY_TV"
-    - delay:
-        seconds: 5
-    - service: media_player.play_media
-      data:
-        entity_id: media_player.samsung_kids_tv
-        media_content_type: "channel"
-        media_content_id: 31
-    - service: media_player.volume_set
-      data:
-        entity_id: media_player.samsung_kids_tv
-        volume_level: 0.3
+#tv_channel_decko:
+#  alias: TV Channel Decko
+#  sequence:
+#    - service: switch.turn_on
+#      data:
+#        entity_id: switch.kids_tv
+#    - delay:
+#        seconds: 5
+#    - service: media_player.play_media
+#      data:
+#        entity_id: media_player.samsung_kids_tv
+#        media_content_type: "send_key"
+#        media_content_id: "KEY_TV"
+#    - delay:
+#        seconds: 5
+#    - service: media_player.play_media
+#      data:
+#        entity_id: media_player.samsung_kids_tv
+#        media_content_type: "channel"
+#        media_content_id: 31
+#    - service: media_player.volume_set
+#      data:
+#        entity_id: media_player.samsung_kids_tv
+#        volume_level: 0.3
