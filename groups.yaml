@@ -19,17 +19,14 @@ sonoff_status:
     - sensor.sonoff_mini
     - sensor.sonoff_pow_tv
     - sensor.kitchen_light
-    - sensor.sonoff_s20_flower
 
 sonoff_wifi_status:
   name: Sonoff wifi status
   entities:
     - sensor.sonoff_t1_wc_wifi_signal
     - sensor.kitchen_light_wifi_signal
-    - sensor.sonoff_s20_flower_wifi_signal
 
 others_hidden:
   name: Others
   entities:
     - binary_sensor.updater
-    - climate.netatmo_kotelna

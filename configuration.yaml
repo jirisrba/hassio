@@ -34,9 +34,6 @@ mikrotik:
 # convert switch to light
 light:
   - platform: switch
-    name: hall light
-    entity_id: switch.hall_light
-  - platform: switch
     name: wc light
     entity_id: switch.wc_light
 
@@ -91,6 +88,13 @@ ble_monitor:
     - mac: "A4:C1:38:47:B6:BC"
       name: "Living Room Temp"
       encryption_key: "adbbba3b9a996f0db4ce40db53911b14"
+
+# https://www.home-assistant.io/integrations/bitcoin/
+sensor:
+  - platform: bitcoin
+    display_options:
+      - exchangerate
+      - trade_volume_btc
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:

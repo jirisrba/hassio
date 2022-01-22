@@ -6,18 +6,23 @@ views:
       - entity: sun.sun
     cards:
       - type: history-graph
-        title: "Kids temperature"
+        title: "Temperatures in the last 48 hours"
+        hours_to_show: 48
         entities:
-          - sensor.ble_temperature_kids_room_temp
-          - sensor.ble_temperature_living_room_temp
+          - entity: sensor.ble_temperature_kids_room_temp
+            name: kids-room
+          - entity: sensor.ble_temperature_living_room_temp
+            name: living-room
+          - sensor.0x00124b0023b48441_temperature
 
       - type: entities
-        title: Bedroom
+        title: Living room
         entities:
           - light.kitchen_light
           - light.bed_light
-          - sensor.ble_temperature_kids_room_temp
-          - sensor.ble_humidity_kids_room_temp
+          - sensor.ble_temperature_living_room_temp
+          - sensor.ble_humidity_living_room_temp
+          - sensor.0x00124b0023b48441_temperature
 
         show_header_toggle: true
 
@@ -26,8 +31,8 @@ views:
         show_header_toggle: true
         entities:
           - light.kids_light
-          - sensor.ble_temperature_living_room_temp
-          - sensor.ble_humidity_living_room_temp
+          - sensor.ble_temperature_kids_room_temp
+          - sensor.ble_humidity_kids_room_temp
 
       - type: entities
         title: all_persons
@@ -50,7 +55,7 @@ views:
       - type: entities
         title: Balkon
         entities:
-          - switch.flower
+          - switch.christmas
         show_header_toggle: true
 
       - type: entities
