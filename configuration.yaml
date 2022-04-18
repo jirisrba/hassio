@@ -7,30 +7,6 @@ homeassistant:
   time_zone: Europe/Prague
   customize: !include customize.yaml
 
-lovelace:
-  mode: yaml
-
-person:
-  - name: jirka
-    id: jirka
-    user_id: 9b636effb9394d9099f8d4d0a36999fd
-    device_trackers:
-      - device_tracker.jirka_iphone
-  - name: lucka
-    id: lucka
-    device_trackers:
-      - device_tracker.iphone_lucka
-  - name: terezka
-    id: terezka
-    device_trackers:
-      - device_tracker.lucka_iphone_2
-
-# Example configuration.yaml entry
-mikrotik:
-  - host: 192.168.2.1
-    username: homeassistant
-    password: homeassistant
-
 # convert switch to light
 light:
   - platform: switch
@@ -67,18 +43,6 @@ homekit:
       - light
       - media_player
 
-influxdb:
-  host: a0d7b954-influxdb
-  port: 8086
-  database: homeassistant
-  username: homeassistant
-  password: homeassistant
-  max_retries: 3
-  default_measurement: state
-  include:
-    domains:
-      - sensor
-
 # Xiomi temperature
 ble_monitor:
   devices:
@@ -89,22 +53,12 @@ ble_monitor:
       name: "Living Room Temp"
       encryption_key: "adbbba3b9a996f0db4ce40db53911b14"
 
-# https://www.home-assistant.io/integrations/bitcoin/
-sensor:
-  - platform: bitcoin
-    display_options:
-      - exchangerate
-      - trade_volume_btc
-
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
-scene:
-  - name: All lights OFF
-    entities:
-      light.bed_light: off
-      light.kitchen_light: off
-      light.wc_light: off
+# Text to speech
+tts:
+  - platform: google_translate
 
 group: !include groups.yaml
 automation: !include automations.yaml
