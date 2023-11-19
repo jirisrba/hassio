@@ -4,6 +4,7 @@ homeassistant:
   longitude: !secret home_long
   elevation: !secret home_alt
   unit_system: metric
+  country: CZ
   time_zone: Europe/Prague
   customize: !include customize.yaml
 
@@ -41,16 +42,6 @@ homekit:
     include_domains:
       - light
       - media_player
-
-# Xiomi temperature
-ble_monitor:
-  devices:
-    - mac: "A4:C1:38:6C:60:9F"
-      name: "Kids Room Temp"
-      encryption_key: "b5d252328a71e89ec992b80ddab04ed1"
-    - mac: "A4:C1:38:47:B6:BC"
-      name: "Living Room Temp"
-      encryption_key: "adbbba3b9a996f0db4ce40db53911b14"
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
