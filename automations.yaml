@@ -1,21 +1,23 @@
+---
 # automations.yaml
-[]
-#- alias: "Light WC on"
-#  trigger:
-#    - platform: state
-#      entity_id: binary_sensor.motion_sensor_1_occupancy
-#      from: "off"
-#      to: "on"
-#  condition:
-#    - condition: state
-#      entity_id: switch.wc_light
-#      state: "off"
-#    - condition: time
-#      after: "06:30:00"
-#      before: "20:00:00"
-#  action:
-#    - service: switch.turn_on
-#      entity_id: switch.wc_light
+
+- id: turn_on_wc_light
+  alias: "Light WC on"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.ewelink_ms01_motion
+      from: "off"
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: switch.wc_light
+      state: "off"
+    - condition: time
+      after: "07:00:00"
+      before: "20:00:00"
+  action:
+    - service: switch.turn_on
+      entity_id: switch.wc_light
 #
 #- alias: "Light WC off"
 #  trigger:
@@ -31,23 +33,3 @@
 #  action:
 #    - service: switch.turn_off
 #      entity_id: switch.wc_light
-
-#- alias: "Power state on HA start-up"
-#  trigger:
-#    platform: homeassistant
-#    event: start
-#  action:
-#    - service: mqtt.publish
-#      data:
-#        topic: "sonoffs/cmnd/state"
-#        payload: ""
-
-#- alias: "Enable MQTT discovery for all devices"
-#  trigger:
-#    platform: homeassistant
-#    event: start
-#  action:
-#    - service: mqtt.publish
-#      data:
-#        topic: "cmnd/sonoffs/SetOption19"
-#        payload: "1"
