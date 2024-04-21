@@ -2,6 +2,7 @@ type: custom:sunsynk-power-flow-card
 cardstyle: full
 show_solar: true
 solar:
+  display_mode: 2
   show_daily: true
   mppts: 1
   max_power: 3600
