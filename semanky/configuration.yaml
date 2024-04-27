@@ -1,0 +1,38 @@
+homeassistant:
+  name: Semanky
+  unit_system: metric
+  country: CZ
+  time_zone: Europe/Prague
+  customize: !include customize.yaml
+
+# Utility meter
+utility_meter:
+  grid_export_energy_daily:
+    source: sensor.shellypro3em_34987a47af2c_total_active_returned_energy
+    cycle: daily
+  grid_import_energy_daily:
+    source: sensor.shellypro3em_34987a47af2c_total_active_energy
+    cycle: daily
+  pv_free_daily:
+    source: sensor.pv_free_power
+    cycle: daily
+
+# Influxdb
+influxdb:
+  host: a0d7b954-influxdb
+  port: 8086
+  database: homeassistant
+  username: homeassistant
+  password: homeassistant
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+template: !include template.yaml

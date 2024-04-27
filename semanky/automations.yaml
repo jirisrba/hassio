@@ -1,0 +1,113 @@
+---
+# automations.yaml
+
+- id: limit_inverter_power
+  alias: "Limit inverter power"
+  description: "Limit inverter power to 500W"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.siton210_temperature
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 0
+      above: 60
+      id: limit_on
+    - platform: numeric_state
+      entity_id: sensor.siton210_temperature
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 0
+      below: 50
+      id: limit_off
+  condition:
+      # from sunrise until sunset
+    - condition: state
+      entity_id: sun.sun
+      state: "above_horizon"
+  action:
+    - choose:
+      - conditions:
+          - condition: trigger
+            id: limit_on
+        sequence:
+          - repeat:
+              sequence:
+                - service: number.set_value
+                  target:
+                    entity_id: number.inverter_active_power_limit
+                  data:
+                    value: "500"
+                - delay: "00:10:00"
+              until:
+                - condition: state
+                  entity_id: sensor.inverter_operational_state
+                  state: 'running'
+      - conditions:
+          - condition: trigger
+            id: limit_off
+        sequence:
+          - repeat:
+              sequence:
+                - service: number.set_value
+                  target:
+                    entity_id: number.inverter_active_power_limit
+                  data:
+                    value: "2600"
+                - delay: "00:10:00"
+              until:
+                - condition: state
+                  entity_id: sensor.inverter_operational_state
+                  state: 'running'
+  mode: single
+
+- id: switch_on_inverter
+  alias: "Switch on inverter"
+  description: "Switch on inverter when solar prediction is higher than threshold"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.energy_current_hour
+      above: 0.3
+    - platform: sun
+      event: sunrise
+      offset: "03:00:00"
+  condition:
+    - condition: state
+      entity_id: sun.sun
+      state: "above_horizon"
+    - condition: state
+      entity_id: switch.shelly_4pm_switch_1
+      state: 'off'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.shelly_4pm_switch_1
+  mode: single
+
+- id: switch_off_inverter
+  alias: "Switch off inverter"
+  description: "Switch off inverter when solar remaining energy is lower than 1kWh"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.energy_current_hour
+      below: 0.2
+    - platform: numeric_state
+      entity_id: sensor.energy_production_today_remaining
+      below: 0.5
+    - platform: sun
+      event: sunset
+      offset: "-00:00:05"
+  condition:
+    - condition: time
+      after: '17:00:00'
+    - condition: sun
+      before: sunset
+    - condition: state
+      entity_id: switch.shelly_4pm_switch_1
+      state: 'on'
+  action:
+    - service: button.press
+      entity_id: button.inverter_stop
+    - service: switch.turn_off
+      entity_id: switch.shelly_4pm_switch_1
+  mode: single

@@ -1,0 +1,6 @@
+# customize.yaml
+
+person.jirka:
+  icon: mdi:helicopter
+switch.wc_fan:
+  icon: mdi:fan

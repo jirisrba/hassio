@@ -1,0 +1,29 @@
+- sensor:
+  # Zapnute bazenove cerpadlo
+  - name: "Pool pump power"
+    unit_of_measurement: W
+    state: >-
+      {% if is_state('binary_sensor.greenbono_k1_pool_pump', 'on') %}
+        450
+      {% else %}
+        0
+      {% endif %}
+
+  # PV výroba mínus spotřeba domu na L1
+  - name: "PV free power"
+    icon: mdi:solar-power-variant
+    unit_of_measurement: W
+    state: >-
+      {% set solar_power = (
+        states('sensor.inverter_pv_power') | float(0)
+        -
+        states('sensor.shellypro3em_34987a47af2c_phase_c_active_power') | float(0)
+        -
+        states('sensor.pool_pump_power') | float(0)
+      ) | round(0) %}
+
+      {% if solar_power > 0 %}
+        {{ solar_power }}
+      {% else %}
+        0
+      {% endif %}
