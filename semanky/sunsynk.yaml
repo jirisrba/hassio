@@ -1,27 +1,42 @@
 type: custom:sunsynk-power-flow-card
 cardstyle: full
 show_solar: true
-solar:
-  display_mode: 2
-  show_daily: true
-  mppts: 1
-  max_power: 3600
 show_battery: false
+show_grid: true
+inverter:
+  modern: false
+  auto_scale: true
+solar:
+  show_daily: true
+  display_mode: 2
+  mppts: 1
+  pv1_name: SW
+  max_power: 2600
+  auto_scale: true
+  dynamic_colour: true
 load:
   show_daily: true
+  auto_scale: true
+  dynamic_colour: true
+  dynamic_icon: true
   max_power: 6000
   additional_loads: 2
   load1_name: Boiler
   load2_name: Pool
-  load1_icon: boiler
+  load1_icon: sensor.boiler_icon
+  load2_icon: sensor.pool_pump_icon
 grid:
   show_daily_buy: true
   show_daily_sell: false
   show_nonessential: true
+  nonessential_icon: mdi:cookie
+  auto_scale: true
 entities:
-  pv1_voltage_109: sensor.inverter_pv1_voltage
+  pv1_voltage_109: sensor.inverterr_pv1_voltage
   pv1_current_110: sensor.inverter_pv1_current
   pv1_power_186: sensor.inverter_pv_power
+  pv1_max_power: 4000
+  efficiency: 4
   inverter_power_175: sensor.inverter_power
   inverter_voltage_154: sensor.inverter_grid_voltage
   inverter_current_164: sensor.inverter_grid_current
@@ -30,8 +45,11 @@ entities:
   remaining_solar: sensor.energy_production_today_remaining
   grid_ct_power_172: sensor.shellypro3em_34987a47af2c_total_active_power
   grid_power_169: sensor.shellypro3em_34987a47af2c_phase_c_active_power
+  essential_load1: sensor.siton210_temperature
   essential_load1_extra: sensor.greenbono_ssr_boiler
   essential_load2_extra: binary_sensor.greenbono_k1_pool_pump
   day_grid_import_76: sensor.day_grid_import
   day_grid_export_77: sensor.day_grid_export
   day_pv_energy_108: sensor.inverter_energy_today
+large_font: false
+panel_mode: true

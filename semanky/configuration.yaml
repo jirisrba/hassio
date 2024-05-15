@@ -17,6 +17,15 @@ utility_meter:
     source: sensor.pv_free_power
     cycle: daily
 
+sensor:
+  - platform: history_stats
+    name: Cerpadlo run time
+    entity_id: binary_sensor.greenbono_k1_pool_pump
+    state: "on"
+    type: time
+    start: "{{ today_at() }}"
+    end: "{{ now() }}"
+
 # Influxdb
 influxdb:
   host: a0d7b954-influxdb

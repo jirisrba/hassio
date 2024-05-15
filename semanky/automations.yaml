@@ -3,23 +3,39 @@
 
 - id: limit_inverter_power
   alias: "Limit inverter power"
-  description: "Limit inverter power to 500W"
+  description: "Limit inverter power"
   trigger:
     - platform: numeric_state
       entity_id: sensor.siton210_temperature
+      above: 56
       for:
         hours: 0
-        minutes: 1
+        minutes: 5
         seconds: 0
-      above: 60
-      id: limit_on
+      id: limit_to_2200
+    - platform: numeric_state
+      entity_id: sensor.siton210_temperature
+      above: 62
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
+      id: limit_to_1200
+    - platform: numeric_state
+      entity_id: sensor.siton210_temperature
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
+      above: 68
+      id: limit_to_500
     - platform: numeric_state
       entity_id: sensor.siton210_temperature
       for:
         hours: 0
         minutes: 1
         seconds: 0
-      below: 50
+      below: 55
       id: limit_off
   condition:
       # from sunrise until sunset
@@ -30,7 +46,39 @@
     - choose:
       - conditions:
           - condition: trigger
-            id: limit_on
+            id: limit_to_2200
+        sequence:
+          - repeat:
+              sequence:
+                - service: number.set_value
+                  target:
+                    entity_id: number.inverter_active_power_limit
+                  data:
+                    value: "2200"
+                - delay: "00:05:00"
+              until:
+                - condition: state
+                  entity_id: sensor.inverter_operational_state
+                  state: 'running'
+      - conditions:
+          - condition: trigger
+            id: limit_to_1200
+        sequence:
+          - repeat:
+              sequence:
+                - service: number.set_value
+                  target:
+                    entity_id: number.inverter_active_power_limit
+                  data:
+                    value: "1200"
+                - delay: "00:05:00"
+              until:
+                - condition: state
+                  entity_id: sensor.inverter_operational_state
+                  state: 'running'
+      - conditions:
+          - condition: trigger
+            id: limit_to_500
         sequence:
           - repeat:
               sequence:
@@ -39,7 +87,7 @@
                     entity_id: number.inverter_active_power_limit
                   data:
                     value: "500"
-                - delay: "00:10:00"
+                - delay: "00:05:00"
               until:
                 - condition: state
                   entity_id: sensor.inverter_operational_state
@@ -55,7 +103,7 @@
                     entity_id: number.inverter_active_power_limit
                   data:
                     value: "2600"
-                - delay: "00:10:00"
+                - delay: "00:05:00"
               until:
                 - condition: state
                   entity_id: sensor.inverter_operational_state
@@ -68,14 +116,14 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.energy_current_hour
-      above: 0.3
-    - platform: sun
-      event: sunrise
-      offset: "03:00:00"
+      above: 0.2
+    - platform: time
+      at: "11:00:00"
   condition:
-    - condition: state
-      entity_id: sun.sun
-      state: "above_horizon"
+    - condition: sun
+      after: sunrise
+    - condition: time
+      before: '12:00:00'
     - condition: state
       entity_id: switch.shelly_4pm_switch_1
       state: 'off'
@@ -90,13 +138,19 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.energy_current_hour
-      below: 0.2
+      below: 0.3
     - platform: numeric_state
       entity_id: sensor.energy_production_today_remaining
-      below: 0.5
+      below: 0.3
+    - platform: numeric_state
+      entity_id: sensor.inverter_pv_power
+      below: 200
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
     - platform: sun
       event: sunset
-      offset: "-00:00:05"
   condition:
     - condition: time
       after: '17:00:00'
@@ -111,3 +165,51 @@
     - service: switch.turn_off
       entity_id: switch.shelly_4pm_switch_1
   mode: single
+
+- id: switch_mycka
+  alias: "Switch mycka on/off"
+  description: "Switch mycka on/off based on inverter power"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.inverter_power
+      above: 1200
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
+      id: switch_mycka_on
+    - platform: numeric_state
+      entity_id: sensor.inverter_power
+      below: 1000
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+      id: switch_mycka_off
+    - platform: numeric_state
+      entity_id: sensor.energy_next_hour
+      below: 1
+      id: switch_mycka_off
+  condition:
+      # from sunrise until sunset
+    - condition: state
+      entity_id: sun.sun
+      state: "above_horizon"
+      # mycka is not running
+    - condition: numeric_state
+      entity_id: sensor.mycka_power
+      below: 10
+  action:
+    - choose:
+      - conditions:
+          - condition: trigger
+            id: switch_mycka_on
+        sequence:
+          - service: switch.turn_on
+            entity_id: switch.mycka
+      - conditions:
+          - condition: trigger
+            id: switch_mycka_off
+        sequence:
+          - service: switch.turn_off
+            entity_id: switch.mycka

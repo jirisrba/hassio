@@ -9,6 +9,22 @@
         0
       {% endif %}
 
+  - name: pool pump icon
+    state: >-
+      {% if is_state('switch.pump', "on") %}
+        mdi:water-pump
+      {% else %}
+        mdi:water-pump-off
+      {% endif %}
+
+  - name: boiler icon
+    state: >-
+      {% if states('sensor.greenbono_ssr_boiler') | float(0) > 0 %}
+        mdi:water-boiler
+      {% else %}
+        mdi:water-boiler-off
+      {% endif %}
+
   # PV výroba mínus spotřeba domu na L1
   - name: "PV free power"
     icon: mdi:solar-power-variant
@@ -17,7 +33,7 @@
       {% set solar_power = (
         states('sensor.inverter_pv_power') | float(0)
         -
-        states('sensor.shellypro3em_34987a47af2c_phase_c_active_power') | float(0)
+        states('sensor.greenbono_lastvalidp1') | float(0)
         -
         states('sensor.pool_pump_power') | float(0)
       ) | round(0) %}
