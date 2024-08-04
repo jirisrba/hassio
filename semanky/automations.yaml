@@ -5,38 +5,54 @@
   alias: "Limit inverter power"
   description: "Limit inverter power"
   trigger:
+    # full power pri zapnute mycce
     - platform: numeric_state
-      entity_id: sensor.siton210_temperature
-      above: 56
+      entity_id: sensor.shellypro3em_34987a47af2c_phase_c_active_power
+      above: 1000
       for:
         hours: 0
-        minutes: 5
+        minutes: 1
+        seconds: 0
+      id: limit_to_3600
+    # omezovani vykonu invertoru pri narustujici teplote bojleru
+    - platform: numeric_state
+      entity_id: sensor.siton210_temperature
+      above: 55
+      for:
+        hours: 0
+        minutes: 1
         seconds: 0
       id: limit_to_2200
     - platform: numeric_state
       entity_id: sensor.siton210_temperature
-      above: 62
+      above: 65
       for:
         hours: 0
-        minutes: 5
+        minutes: 1
         seconds: 0
       id: limit_to_1200
     - platform: numeric_state
       entity_id: sensor.siton210_temperature
       for:
         hours: 0
-        minutes: 5
+        minutes: 1
         seconds: 0
-      above: 68
+      above: 70
       id: limit_to_500
+    # full power pri teplote < 50°C
     - platform: numeric_state
       entity_id: sensor.siton210_temperature
       for:
         hours: 0
         minutes: 1
         seconds: 0
-      below: 55
-      id: limit_off
+      below: 50
+      id: full_power
+      # prehraty bojler 75°C => limit to 500W
+    - platform: state
+      entity_id: binary_sensor.greenbono_k3_relay_status
+      to: 'on'
+      id: limit_to_500
   condition:
       # from sunrise until sunset
     - condition: state
@@ -46,68 +62,64 @@
     - choose:
       - conditions:
           - condition: trigger
+            id: limit_to_3600
+        sequence:
+          - service: number.set_value
+            target:
+              entity_id: number.inverter_active_power_limit
+            data:
+              value: "3600"
+      - conditions:
+          - condition: trigger
             id: limit_to_2200
         sequence:
-          - repeat:
-              sequence:
-                - service: number.set_value
-                  target:
-                    entity_id: number.inverter_active_power_limit
-                  data:
-                    value: "2200"
-                - delay: "00:05:00"
-              until:
-                - condition: state
-                  entity_id: sensor.inverter_operational_state
-                  state: 'running'
+          - service: number.set_value
+            target:
+              entity_id: number.inverter_active_power_limit
+            data:
+              value: "2200"
       - conditions:
           - condition: trigger
             id: limit_to_1200
         sequence:
-          - repeat:
-              sequence:
-                - service: number.set_value
-                  target:
-                    entity_id: number.inverter_active_power_limit
-                  data:
-                    value: "1200"
-                - delay: "00:05:00"
-              until:
-                - condition: state
-                  entity_id: sensor.inverter_operational_state
-                  state: 'running'
+          - service: number.set_value
+            target:
+              entity_id: number.inverter_active_power_limit
+            data:
+              value: "1200"
       - conditions:
           - condition: trigger
             id: limit_to_500
         sequence:
-          - repeat:
-              sequence:
-                - service: number.set_value
-                  target:
-                    entity_id: number.inverter_active_power_limit
-                  data:
-                    value: "500"
-                - delay: "00:05:00"
-              until:
-                - condition: state
-                  entity_id: sensor.inverter_operational_state
-                  state: 'running'
+          - service: number.set_value
+            target:
+              entity_id: number.inverter_active_power_limit
+            data:
+              value: "500"
       - conditions:
           - condition: trigger
-            id: limit_off
+            id: full_power
+          - condition: numeric_state
+            entity_id: sensor.energy_production_today
+            below: 14
         sequence:
-          - repeat:
-              sequence:
-                - service: number.set_value
-                  target:
-                    entity_id: number.inverter_active_power_limit
-                  data:
-                    value: "2600"
-                - delay: "00:05:00"
-              until:
-                - condition: state
-                  entity_id: sensor.inverter_operational_state
-                  state: 'running'
+          - service: number.set_value
+            target:
+              entity_id: number.inverter_active_power_limit
+            data:
+              value: "2600"
+      - conditions:
+          - condition: trigger
+            id: full_power
+          - condition: numeric_state
+            entity_id: sensor.energy_production_today
+            above: 14
+        sequence:
+          - service: number.set_value
+            target:
+              entity_id: number.inverter_active_power_limit
+            data:
+              value: "2200"
   mode: single
 
 - id: switch_on_inverter
@@ -117,8 +129,6 @@
     - platform: numeric_state
       entity_id: sensor.energy_current_hour
       above: 0.2
-    - platform: time
-      at: "11:00:00"
   condition:
     - condition: sun
       after: sunrise
@@ -197,7 +207,7 @@
       state: "above_horizon"
       # mycka is not running
     - condition: numeric_state
-      entity_id: sensor.mycka_power
+      entity_id: sensor.shelly_2pm_switch_0_power
       below: 10
   action:
     - choose:
@@ -206,10 +216,10 @@
             id: switch_mycka_on
         sequence:
           - service: switch.turn_on
-            entity_id: switch.mycka
+            entity_id: switch.shelly_2pm_switch_0
       - conditions:
           - condition: trigger
             id: switch_mycka_off
         sequence:
           - service: switch.turn_off
-            entity_id: switch.mycka
+            entity_id: switch.shelly_2pm_switch_0
