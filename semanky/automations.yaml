@@ -7,7 +7,7 @@
   trigger:
     # full power pri zapnute mycce
     - platform: numeric_state
-      entity_id: sensor.shellypro3em_34987a47af2c_phase_c_active_power
+      entity_id: sensor.shelly_pro3em_phase_c_active_power
       above: 1000
       for:
         hours: 0
@@ -135,11 +135,11 @@
     - condition: time
       before: '12:00:00'
     - condition: state
-      entity_id: switch.shelly_4pm_switch_1
+      entity_id: switch.solar
       state: 'off'
   action:
     - service: switch.turn_on
-      entity_id: switch.shelly_4pm_switch_1
+      entity_id: switch.solar
   mode: single
 
 - id: switch_off_inverter
@@ -167,13 +167,13 @@
     - condition: sun
       before: sunset
     - condition: state
-      entity_id: switch.shelly_4pm_switch_1
+      entity_id: switch.solar
       state: 'on'
   action:
     - service: button.press
       entity_id: button.inverter_stop
     - service: switch.turn_off
-      entity_id: switch.shelly_4pm_switch_1
+      entity_id: switch.solar
   mode: single
 
 - id: switch_mycka
@@ -207,7 +207,7 @@
       state: "above_horizon"
       # mycka is not running
     - condition: numeric_state
-      entity_id: sensor.shelly_2pm_switch_0_power
+      entity_id: sensor.mycka_power
       below: 10
   action:
     - choose:
@@ -216,10 +216,10 @@
             id: switch_mycka_on
         sequence:
           - service: switch.turn_on
-            entity_id: switch.shelly_2pm_switch_0
+            entity_id: switch.mycka
       - conditions:
           - condition: trigger
             id: switch_mycka_off
         sequence:
           - service: switch.turn_off
-            entity_id: switch.shelly_2pm_switch_0
+            entity_id: switch.mycka
