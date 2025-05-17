@@ -13,7 +13,7 @@
         hours: 0
         minutes: 1
         seconds: 0
-      id: limit_to_3600
+      id: limit_to_3000
     # omezovani vykonu invertoru pri narustujici teplote bojleru
     - platform: numeric_state
       entity_id: sensor.siton210_temperature
@@ -62,13 +62,13 @@
     - choose:
       - conditions:
           - condition: trigger
-            id: limit_to_3600
+            id: limit_to_3000
         sequence:
           - service: number.set_value
             target:
               entity_id: number.inverter_active_power_limit
             data:
-              value: "3600"
+              value: "3000"
       - conditions:
           - condition: trigger
             id: limit_to_2200
