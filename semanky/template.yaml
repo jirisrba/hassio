@@ -1,5 +1,5 @@
 - sensor:
-  # Zapnute bazenove cerpadlo
+  # Pool pump running power estimate
   - name: "Pool pump power"
     unit_of_measurement: W
     state: >-
@@ -11,7 +11,7 @@
 
   - name: pool pump icon
     state: >-
-      {% if is_state('switch.pump', "on") %}
+      {% if is_state('binary_sensor.greenbono_k1_pool_pump', 'on') %}
         mdi:water-pump
       {% else %}
         mdi:water-pump-off
@@ -19,21 +19,36 @@
 
   - name: boiler icon
     state: >-
-      {% if states('sensor.greenbono_ssr_boiler') | float(0) > 0 %}
+      {% if states('sensor.greenbono_ssr_boiler_output') | float(0) > 0 %}
         mdi:water-boiler
       {% else %}
         mdi:water-boiler-off
       {% endif %}
 
-  # PV výroba mínus spotřeba domu na L1
+  # Grid export energy — SPF is off-grid, no export ever
+  - name: "Grid Export Energy Today"
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    state: "0"
+  - name: "PV Total Power"
+    icon: mdi:solar-power
+    unit_of_measurement: W
+    state: >-
+      {{
+        states('sensor.growatt_pv1_power') | float(0) +
+        states('sensor.growatt_pv2_power') | float(0)
+      }}
+
+  # PV free power = total PV minus house consumption on L1 minus pool pump
   - name: "PV free power"
     icon: mdi:solar-power-variant
     unit_of_measurement: W
     state: >-
       {% set solar_power = (
-        states('sensor.inverter_pv_power') | float(0)
+        states('sensor.pv_total_power') | float(0)
         -
-        states('sensor.greenbono_lastvalidp1') | float(0)
+        states('sensor.greenbono_grid_power_l1') | float(0)
         -
         states('sensor.pool_pump_power') | float(0)
       ) | round(0) %}
