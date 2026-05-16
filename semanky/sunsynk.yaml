@@ -1,19 +1,29 @@
 type: custom:sunsynk-power-flow-card
 cardstyle: full
 show_solar: true
-show_battery: false
+show_battery: true
 show_grid: true
 inverter:
   modern: false
   auto_scale: true
+  model: growatt
 solar:
   show_daily: true
   display_mode: 2
-  mppts: 1
-  pv1_name: SW
-  max_power: 2600
+  mppts: 2
+  pv1_name: PV1
+  pv2_name: PV2
+  max_power: 6000
   auto_scale: true
   dynamic_colour: true
+battery:
+  show_daily: true
+  auto_scale: true
+  dynamic_colour: true
+  max_power: 5600
+  shutdown_soc: number.growatt_battery_bat_low_to_uti
+  shutdown_soc_offgrid: number.growatt_battery_bat_low_to_uti
+  invert_power: true     # ESPHome: positive = charge, negative = discharge
 load:
   show_daily: true
   auto_scale: true
@@ -23,8 +33,8 @@ load:
   additional_loads: 2
   load1_name: Boiler
   load2_name: Pool
-  load1_icon: sensor.boiler_icon
-  load2_icon: sensor.pool_pump_icon
+  load1_icon: boiler
+  load2_icon: pump
 grid:
   show_daily_buy: true
   show_daily_sell: false
@@ -32,24 +42,51 @@ grid:
   nonessential_icon: mdi:cookie
   auto_scale: true
 entities:
-  pv1_voltage_109: sensor.inverter_pv1_voltage
-  pv1_current_110: sensor.inverter_pv1_current
-  pv1_power_186: sensor.inverter_pv_power
-  pv1_max_power: 4000
+  # PV
+  pv1_voltage_109: sensor.growatt_solar_pv1_voltage
+  pv1_current_110: sensor.growatt_solar_pv1_current
+  pv1_power_186: sensor.growatt_solar_pv1_power
+  pv2_voltage_183: sensor.growatt_solar_pv2_voltage
+  pv2_current_184: sensor.growatt_solar_pv2_current
+  pv2_power_187: sensor.growatt_solar_pv2_power
+  pv1_max_power: 3000
+  pv2_max_power: 3000
   efficiency: 4
-  inverter_power_175: sensor.inverter_power
-  inverter_voltage_154: sensor.inverter_grid_voltage
-  inverter_current_164: sensor.inverter_grid_current
-  load_frequency_192: sensor.inverter_grid_frequency
-  inverter_status_59: sensor.inverter_operational_state
+  day_pv_energy_108: sensor.growatt_solar_energy_today
+
+  # Inverter / output
+  inverter_power_175: sensor.growatt_solar_ac_power
+  inverter_voltage_154: sensor.growatt_load_ac_voltage
+  inverter_current_164: sensor.growatt_solar_ac_current
+  load_frequency_192: sensor.growatt_grid_grid_frequency
+  inverter_status_59: sensor.growatt_status
   remaining_solar: sensor.energy_production_today_remaining
+
+  # Temperatures
+  radiator_temp_91: sensor.growatt_solar_inverter_temperature
+  dc_transformer_temp_90: sensor.growatt_solar_dcdc_temperature
+
+  # Battery
+  battery_voltage_183: sensor.growatt_battery_battery_voltage
+  battery_soc_184: sensor.growatt_battery_battery_soc
+  battery_power_190: sensor.growatt_battery_battery_power
+  battery_current_191: sensor.growatt_battery_battery_current
+  day_grid_import_76: sensor.growatt_battery_ac_charge_energy_today
+  day_grid_export_77: sensor.grid_export_energy_today
+  day_battery_charge_70: sensor.growatt_battery_battery_charge_today
+  day_battery_discharge_71: sensor.growatt_battery_operational_discharge_energy_today
+
+  # Grid / AC input
+  grid_voltage_150: sensor.growatt_grid_grid_voltage
   grid_ct_power_172: sensor.shelly_pro3em_total_active_power
   grid_power_169: sensor.shelly_pro3em_phase_c_active_power
+  grid_connected_status_194: binary_sensor.growatt_solar_grid_connected
+
+  # Loads
   essential_load1: sensor.siton210_temperature
-  essential_load1_extra: sensor.greenbono_ssr_boiler
-  essential_load2_extra: binary_sensor.greenbono_k1_pool_pump
-  day_grid_import_76: sensor.day_grid_import
-  day_grid_export_77: sensor.day_grid_export
-  day_pv_energy_108: sensor.inverter_energy_today
+  # essential_load1_extra and essential_load2_extra: GBO not used yet
+  essential_load1_extra: sensor.greenbono_solar_ssr_boiler_output
+  essential_load2_extra: binary_sensor.greenbono_solar_k1_pool_pump
+
 large_font: false
 panel_mode: true
