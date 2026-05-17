@@ -2,7 +2,7 @@ type: custom:sunsynk-power-flow-card
 cardstyle: full
 show_solar: true
 show_battery: true
-show_grid: true        # Grid = AC vstup (síť/generátor pro nabíjení baterie)
+show_grid: true
 inverter:
   modern: false
   auto_scale: true
@@ -32,18 +32,16 @@ load:
   max_power: 6000
   show_aux: false
   additional_loads: 4
-  load1_name: Boiler
-  load2_name: Pool
+  load1_name: Bojler
+  load2_name: Bazén
   load3_name: Myčka
   load4_name: ""
   load1_icon: boiler
-  load2_icon: pump
+  load2_icon: mdi:pool
   load3_icon: sensor.mycka_icon
   load3_switch: switch.mycka
 grid:
-  show_daily_buy: true
-  show_daily_sell: false
-  show_nonessential: false
+  show_nonessential: true
   auto_scale: true
 entities:
   # PV
@@ -62,13 +60,13 @@ entities:
   remaining_solar: sensor.energy_production_today_remaining
 
   # Inverter / output
-  # SPF: load_power (regs 9+10) = AC výstup do zátěže
+  # SPF: load_power (regs 9+10) = AC output to load
   inverter_power_175: sensor.growatt_solar_ac_power
   inverter_voltage_154: sensor.shelly_pro3em_phase_c_voltage
   inverter_current_164: sensor.growatt_solar_ac_current
   load_frequency_192: sensor.growatt_solar_ac_frequency
   inverter_status_59: sensor.growatt_status
-  # SPF nemá binary_sensor pro grid_connected (off-grid)
+  # SPF has no binary_sensor for grid_connected (off-grid)
   grid_connected_status_194: ~
 
   # Temperatures
@@ -78,21 +76,23 @@ entities:
 
   # Battery
   # SPF regs: battery_voltage(17), battery_soc(18), battery_power(77+78), battery_current(68)
-  # POZOR: battery_current měří proud pouze při AC nabíjení (hw omezení SPF)
+  # NOTE: battery_current measures current only during AC charging (hw limitation of SPF)
   battery_voltage_183: sensor.growatt_battery_battery_voltage
   battery_soc_184: sensor.growatt_battery_battery_soc
   battery_power_190: sensor.growatt_battery_battery_power
   battery_current_191: sensor.growatt_battery_current_calculated
-  # SPF regs 56+57: charge_energy_today = pouze AC nabíjení (ze sítě/generátoru)
+  # SPF regs 56+57: charge_energy_today = AC charging only (from grid/generator)
   day_grid_import_76: sensor.growatt_battery_ac_charge_energy_today
   day_grid_export_77: ~
   day_battery_charge_70: sensor.growatt_battery_battery_charge_today
   day_battery_discharge_71: sensor.growatt_battery_battery_discharge_today
 
-  # Grid = celkový Shelly (všechny 3 fáze)
+  # Grid = total Shelly (all 3 phases)
   grid_voltage_150: sensor.growatt_grid_grid_voltage
   grid_ct_power_172: sensor.shelly_pro3em_total_active_power
-  grid_power_169: sensor.shelly_pro3em_total_active_power
+  grid_ct_power_L2: sensor.shelly_pro3em_phase_a_active_power
+  grid_ct_power_L3: sensor.shelly_pro3em_phase_b_active_power
+  grid_power_169: sensor.shelly_pro3em_phase_c_active_power
 
   # Loads
   essential_load1: sensor.siton210_temperature

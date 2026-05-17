@@ -33,17 +33,6 @@
         mdi:dishwasher-off
       {% endif %}
 
-  # Shelly L1+L2 power (fáze bez Growatt invertoru, který je na L3)
-  - name: "Shelly L1+L2 Power"
-    unique_id: shelly_l1_l2_power
-    unit_of_measurement: W
-    device_class: power
-    state: >-
-      {{
-        states('sensor.shelly_pro3em_phase_a_active_power') | float(0) +
-        states('sensor.shelly_pro3em_phase_b_active_power') | float(0)
-      }}
-
   # Battery current calculated from power/voltage (SPF hw limitation: reg 68 only works during AC charging)
   # Positive = charge, negative = discharge (matches battery_power sign convention)
   - name: "Growatt Battery Current Calculated"
@@ -56,40 +45,6 @@
       {% set power = states('sensor.growatt_battery_battery_power') | float(0) %}
       {% if voltage > 0 %}
         {{ (power / voltage * -1) | round(1) }}
-      {% else %}
-        0
-      {% endif %}
-
-  # Grid export energy — SPF is off-grid, no export ever
-  - name: "Grid Export Energy Today"
-    unit_of_measurement: kWh
-    device_class: energy
-    state_class: total_increasing
-    state: "0"
-  - name: "PV Total Power"
-    icon: mdi:solar-power
-    unit_of_measurement: W
-    state: >-
-      {{
-        states('sensor.growatt_pv1_power') | float(0) +
-        states('sensor.growatt_pv2_power') | float(0)
-      }}
-
-  # PV free power = total PV minus house consumption on L1 minus pool pump
-  - name: "PV free power"
-    icon: mdi:solar-power-variant
-    unit_of_measurement: W
-    state: >-
-      {% set solar_power = (
-        states('sensor.pv_total_power') | float(0)
-        -
-        states('sensor.greenbono_grid_power_l1') | float(0)
-        -
-        states('sensor.pool_pump_power') | float(0)
-      ) | round(0) %}
-
-      {% if solar_power > 0 %}
-        {{ solar_power }}
       {% else %}
         0
       {% endif %}
