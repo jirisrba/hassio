@@ -25,6 +25,41 @@
         mdi:water-boiler-off
       {% endif %}
 
+  - name: "Mycka icon"
+    state: >-
+      {% if is_state('switch.mycka', 'on') %}
+        mdi:dishwasher
+      {% else %}
+        mdi:dishwasher-off
+      {% endif %}
+
+  # Shelly L1+L2 power (fáze bez Growatt invertoru, který je na L3)
+  - name: "Shelly L1+L2 Power"
+    unique_id: shelly_l1_l2_power
+    unit_of_measurement: W
+    device_class: power
+    state: >-
+      {{
+        states('sensor.shelly_pro3em_phase_a_active_power') | float(0) +
+        states('sensor.shelly_pro3em_phase_b_active_power') | float(0)
+      }}
+
+  # Battery current calculated from power/voltage (SPF hw limitation: reg 68 only works during AC charging)
+  # Positive = charge, negative = discharge (matches battery_power sign convention)
+  - name: "Growatt Battery Current Calculated"
+    unique_id: growatt_battery_current_calculated
+    unit_of_measurement: A
+    device_class: current
+    state_class: measurement
+    state: >-
+      {% set voltage = states('sensor.growatt_battery_battery_voltage') | float(0) %}
+      {% set power = states('sensor.growatt_battery_battery_power') | float(0) %}
+      {% if voltage > 0 %}
+        {{ (power / voltage * -1) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+
   # Grid export energy — SPF is off-grid, no export ever
   - name: "Grid Export Energy Today"
     unit_of_measurement: kWh
