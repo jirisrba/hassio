@@ -21,6 +21,7 @@ battery:
   auto_scale: true
   dynamic_colour: true
   max_power: 5600
+  energy: 3550
   invert_power: true
   shutdown_soc: 20
 load:
@@ -29,19 +30,20 @@ load:
   dynamic_colour: true
   dynamic_icon: true
   max_power: 6000
-  additional_loads: 3
+  show_aux: false
+  additional_loads: 4
   load1_name: Boiler
   load2_name: Pool
   load3_name: Myčka
+  load4_name: ""
   load1_icon: boiler
   load2_icon: pump
   load3_icon: sensor.mycka_icon
   load3_switch: switch.mycka
 grid:
   show_daily_buy: true
-  show_daily_sell: false       # SPF off-grid, žádný export
-  show_nonessential: true
-  nonessential_icon: mdi:transmission-tower
+  show_daily_sell: false
+  show_nonessential: false
   auto_scale: true
 entities:
   # PV
@@ -82,22 +84,15 @@ entities:
   battery_power_190: sensor.growatt_battery_battery_power
   battery_current_191: sensor.growatt_battery_current_calculated
   # SPF regs 56+57: charge_energy_today = pouze AC nabíjení (ze sítě/generátoru)
-  day_grid_import_76: sensor.growatt_battery_charge_energy_today
+  day_grid_import_76: sensor.growatt_battery_ac_charge_energy_today
   day_grid_export_77: ~
-  day_battery_charge_70: sensor.growatt_battery_charge_energy_today
-  # SPF regs 85+86: op_discharge_energy_today
-  day_battery_discharge_71: sensor.growatt_battery_op_discharge_energy_today
+  day_battery_charge_70: sensor.growatt_battery_battery_charge_today
+  day_battery_discharge_71: sensor.growatt_battery_battery_discharge_today
 
-  # Grid / AC vstup (Shelly měří celou budovu, Growatt je na L3)
+  # Grid = celkový Shelly (všechny 3 fáze)
   grid_voltage_150: sensor.growatt_grid_grid_voltage
-  # grid_ct_power = total Shelly (všechny 3 fáze) → celkový tok ze sítě do budovy
   grid_ct_power_172: sensor.shelly_pro3em_total_active_power
-  # grid_power = pouze L3 (fáze, na které je Growatt)
-  grid_power_169: sensor.shelly_pro3em_phase_c_active_power
-
-  # Nonessential load = L1 + L2 (fáze bez invertoru)
-  # Vyžaduje template sensor - viz níže
-  nonessential_load: sensor.shelly_l1_l2_power
+  grid_power_169: sensor.shelly_pro3em_total_active_power
 
   # Loads
   essential_load1: sensor.siton210_temperature
