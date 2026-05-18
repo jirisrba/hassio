@@ -1,0 +1,298 @@
+####################################
+###   Growatt ESP 6000 ES PLUS   ###
+####################################
+- name: growatt
+  type: tcp
+  host: 192.168.2.120
+  port: 8899
+  message_wait_milliseconds: 60
+
+  sensors:
+
+    # --- Inverter ---
+
+    - name: Growatt Status
+      unique_id: growatt_status
+      slave: 1
+      address: 0
+      input_type: input
+      data_type: int16
+
+    # --- PV ---
+
+    - name: Growatt PV1 Voltage
+      unique_id: growatt_pv1_voltage
+      device_class: voltage
+      unit_of_measurement: V
+      slave: 1
+      address: 1
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt PV2 Voltage
+      unique_id: growatt_pv2_voltage
+      device_class: voltage
+      unit_of_measurement: V
+      slave: 1
+      address: 2
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt PV1 Power
+      unique_id: growatt_pv1_power
+      device_class: power
+      unit_of_measurement: W
+      slave: 1
+      address: 3
+      input_type: input
+      data_type: uint32
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt PV2 Power
+      unique_id: growatt_pv2_power
+      device_class: power
+      unit_of_measurement: W
+      slave: 1
+      address: 5
+      input_type: input
+      data_type: uint32
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt PV1 Current
+      unique_id: growatt_pv1_current
+      device_class: current
+      unit_of_measurement: A
+      slave: 1
+      address: 7
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt PV2 Current
+      unique_id: growatt_pv2_current
+      device_class: current
+      unit_of_measurement: A
+      slave: 1
+      address: 8
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt Energy Today
+      unique_id: growatt_energy_today
+      device_class: energy
+      unit_of_measurement: kWh
+      state_class: total_increasing
+      slave: 1
+      address: 48
+      input_type: input
+      data_type: uint32
+      scale: 0.1
+      precision: 1
+
+    # --- Battery ---
+
+    - name: Growatt Battery SOC
+      unique_id: growatt_battery_soc
+      device_class: battery
+      unit_of_measurement: "%"
+      slave: 1
+      address: 18
+      input_type: input
+      data_type: int16
+
+    - name: Growatt Battery Voltage
+      unique_id: growatt_battery_voltage
+      device_class: voltage
+      unit_of_measurement: V
+      slave: 1
+      address: 17
+      input_type: input
+      data_type: int16
+      scale: 0.01
+      precision: 2
+
+    # SPF convention: positive = discharge, negative = charge
+    - name: Growatt Battery Power
+      unique_id: growatt_battery_power
+      device_class: power
+      unit_of_measurement: W
+      slave: 1
+      address: 77
+      input_type: input
+      data_type: int32
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt Charge Current
+      unique_id: growatt_charge_current
+      device_class: current
+      unit_of_measurement: A
+      slave: 1
+      address: 83
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt Discharge Current
+      unique_id: growatt_discharge_current
+      device_class: current
+      unit_of_measurement: A
+      slave: 1
+      address: 84
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    # AC charge energy today (SPF: only AC charging, not PV→battery)
+    - name: Growatt Battery Charge Today
+      unique_id: growatt_battery_charge_today
+      device_class: energy
+      unit_of_measurement: kWh
+      state_class: total_increasing
+      slave: 1
+      address: 56
+      input_type: input
+      data_type: uint32
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt Battery Discharge Today
+      unique_id: growatt_battery_discharge_today
+      device_class: energy
+      unit_of_measurement: kWh
+      state_class: total_increasing
+      slave: 1
+      address: 60
+      input_type: input
+      data_type: uint32
+      scale: 0.1
+      precision: 1
+
+    # --- Grid ---
+
+    - name: Growatt Grid Voltage
+      unique_id: growatt_grid_voltage
+      device_class: voltage
+      unit_of_measurement: V
+      slave: 1
+      address: 20
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    # --- Load (AC output) ---
+
+    - name: Growatt Load Power
+      unique_id: growatt_load_power
+      device_class: power
+      unit_of_measurement: W
+      slave: 1
+      address: 9
+      input_type: input
+      data_type: uint32
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt AC Voltage
+      unique_id: growatt_ac_voltage
+      device_class: voltage
+      unit_of_measurement: V
+      slave: 1
+      address: 22
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt AC Current
+      unique_id: growatt_ac_current
+      device_class: current
+      unit_of_measurement: A
+      slave: 1
+      address: 34
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt AC Frequency
+      unique_id: growatt_ac_frequency
+      device_class: frequency
+      unit_of_measurement: Hz
+      slave: 1
+      address: 23
+      input_type: input
+      data_type: int16
+      scale: 0.01
+      precision: 2
+
+    - name: Growatt Inverter Current
+      unique_id: growatt_inverter_current
+      device_class: current
+      unit_of_measurement: A
+      slave: 1
+      address: 35
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    # --- Temperatures ---
+
+    - name: Growatt Inverter Temp
+      unique_id: growatt_inverter_temp
+      device_class: temperature
+      unit_of_measurement: °C
+      slave: 1
+      address: 25
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt DC DC Temp
+      unique_id: growatt_dc_dc_temp
+      device_class: temperature
+      unit_of_measurement: °C
+      slave: 1
+      address: 26
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    # --- Settings (holding registers, read-only) ---
+
+    - name: Growatt SOC Battery to Grid
+      unique_id: growatt_soc_battery_to_grid
+      device_class: battery
+      unit_of_measurement: "%"
+      slave: 1
+      address: 37
+      input_type: holding
+      data_type: uint16
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt SOC Grid to Battery
+      unique_id: growatt_soc_grid_to_battery
+      device_class: battery
+      unit_of_measurement: "%"
+      slave: 1
+      address: 95
+      input_type: holding
+      data_type: uint16
+      scale: 0.1
+      precision: 1

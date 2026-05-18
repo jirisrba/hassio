@@ -12,9 +12,6 @@ utility_meter:
   grid_import_energy_daily:
     source: sensor.shelly_pro3em_total_active_energy
     cycle: daily
-  pv_free_daily:
-    source: sensor.pv_free_power
-    cycle: daily
 
 sensor:
   - platform: history_stats
@@ -31,6 +28,8 @@ default_config:
 # Load frontend themes from the themes folder
 frontend:
   themes: !include_dir_merge_named themes
+
+modbus: !include modbus.yaml
 
 automation: !include automations.yaml
 script: !include scripts.yaml
