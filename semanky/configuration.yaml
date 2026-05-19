@@ -3,6 +3,69 @@ homeassistant:
   unit_system: metric
   country: CZ
   time_zone: Europe/Prague
+  customize:
+    # Inverter
+    sensor.growatt_status:
+      icon: mdi:information-outline
+    # PV
+    sensor.growatt_pv1_voltage:
+      icon: mdi:solar-panel
+    sensor.growatt_pv2_voltage:
+      icon: mdi:solar-panel
+    sensor.growatt_pv1_current:
+      icon: mdi:solar-panel
+    sensor.growatt_pv2_current:
+      icon: mdi:solar-panel
+    sensor.growatt_pv1_power:
+      icon: mdi:solar-panel-large
+    sensor.growatt_pv2_power:
+      icon: mdi:solar-panel-large
+    sensor.growatt_energy_today:
+      icon: mdi:solar-power
+    sensor.growatt_energy_total:
+      icon: mdi:solar-power
+    # Battery
+    sensor.growatt_battery_soc:
+      icon: mdi:battery-high
+    sensor.growatt_battery_voltage:
+      icon: mdi:battery
+    sensor.growatt_battery_power:
+      icon: mdi:battery-charging
+    sensor.growatt_charge_current:
+      icon: mdi:battery-arrow-up
+    sensor.growatt_discharge_current:
+      icon: mdi:battery-arrow-down
+    sensor.growatt_battery_charge_today:
+      icon: mdi:battery-arrow-up
+    sensor.growatt_battery_charge_total:
+      icon: mdi:battery-arrow-up
+    sensor.growatt_battery_discharge_today:
+      icon: mdi:battery-arrow-down
+    sensor.growatt_battery_discharge_total:
+      icon: mdi:battery-arrow-down
+    sensor.growatt_soc_battery_to_grid:
+      icon: mdi:battery-low
+    sensor.growatt_soc_grid_to_battery:
+      icon: mdi:battery-medium
+    # Grid
+    sensor.growatt_grid_voltage:
+      icon: mdi:transmission-tower
+    # Load / AC output
+    sensor.growatt_load_power:
+      icon: mdi:home-lightning-bolt
+    sensor.growatt_ac_voltage:
+      icon: mdi:home-lightning-bolt
+    sensor.growatt_ac_current:
+      icon: mdi:home-lightning-bolt
+    sensor.growatt_ac_frequency:
+      icon: mdi:sine-wave
+    sensor.growatt_inverter_current:
+      icon: mdi:current-ac
+    # Temperatures
+    sensor.growatt_inverter_temp:
+      icon: mdi:thermometer
+    sensor.growatt_dc_dc_temp:
+      icon: mdi:thermometer
 
 # Utility meter
 utility_meter:
@@ -29,7 +92,7 @@ default_config:
 frontend:
   themes: !include_dir_merge_named themes
 
-modbus: !include modbus.yaml
+# modbus: !include modbus.yaml
 
 automation: !include automations.yaml
 script: !include scripts.yaml

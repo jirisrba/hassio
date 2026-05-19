@@ -98,6 +98,18 @@
       scale: 0.1
       precision: 1
 
+    - name: Growatt Energy Total
+      unique_id: growatt_energy_total
+      device_class: energy
+      unit_of_measurement: kWh
+      state_class: total_increasing
+      slave: 1
+      address: 50
+      input_type: input
+      data_type: uint32
+      scale: 0.1
+      precision: 1
+
     # --- Battery ---
 
     - name: Growatt Battery SOC
@@ -167,6 +179,18 @@
       scale: 0.1
       precision: 1
 
+    - name: Growatt Battery Charge Total
+      unique_id: growatt_battery_charge_total
+      device_class: energy
+      unit_of_measurement: kWh
+      state_class: total_increasing
+      slave: 1
+      address: 58
+      input_type: input
+      data_type: uint32
+      scale: 0.1
+      precision: 1
+
     - name: Growatt Battery Discharge Today
       unique_id: growatt_battery_discharge_today
       device_class: energy
@@ -174,6 +198,18 @@
       state_class: total_increasing
       slave: 1
       address: 60
+      input_type: input
+      data_type: uint32
+      scale: 0.1
+      precision: 1
+
+    - name: Growatt Battery Discharge Total
+      unique_id: growatt_battery_discharge_total
+      device_class: energy
+      unit_of_measurement: kWh
+      state_class: total_increasing
+      slave: 1
+      address: 62
       input_type: input
       data_type: uint32
       scale: 0.1

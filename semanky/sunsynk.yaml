@@ -45,42 +45,50 @@ grid:
   auto_scale: true
 entities:
   # PV
-  pv1_voltage_109: sensor.growatt_pv1_voltage
-  pv1_current_110: sensor.growatt_pv1_current
-  pv1_power_186: sensor.growatt_pv1_power
-  pv2_voltage_183: sensor.growatt_pv2_voltage
-  pv2_current_184: sensor.growatt_pv2_current
-  pv2_power_187: sensor.growatt_pv2_power
+  # SPF regs: pv1_voltage(1), pv1_current(7), pv1_power(3+4)
+  pv1_voltage_109: sensor.growatt_solar_pv1_voltage
+  pv1_current_110: sensor.growatt_solar_pv1_current
+  pv1_power_186: sensor.growatt_solar_pv1_power
+  pv2_voltage_183: sensor.growatt_solar_pv2_voltage
+  pv2_current_184: sensor.growatt_solar_pv2_current
+  pv2_power_187: sensor.growatt_solar_pv2_power
   pv1_max_power: 3000
   pv2_max_power: 3000
   efficiency: 4
-  day_pv_energy_108: sensor.growatt_energy_today
+  # SPF regs 48+49 combined
+  day_pv_energy_108: sensor.growatt_solar_energy_today
   remaining_solar: sensor.energy_production_today_remaining
 
   # Inverter / output
-  inverter_power_175: sensor.growatt_load_power
-  inverter_voltage_154: sensor.growatt_ac_voltage
-  inverter_current_164: sensor.growatt_ac_current
-  load_frequency_192: sensor.growatt_ac_frequency
+  # SPF: load_power (regs 9+10) = AC output to load
+  inverter_power_175: sensor.growatt_solar_ac_power
+  inverter_voltage_154: sensor.growatt_load_ac_voltage
+  inverter_current_164: sensor.growatt_solar_ac_current
+  load_frequency_192: sensor.growatt_solar_ac_frequency
   inverter_status_59: sensor.growatt_status
+  # SPF has no binary_sensor for grid_connected (off-grid)
   grid_connected_status_194: ~
 
   # Temperatures
-  radiator_temp_91: sensor.growatt_inverter_temp
-  dc_transformer_temp_90: sensor.growatt_dc_dc_temp
+  # SPF regs 25 (inverter_temp), 26 (dcdc_temp)
+  radiator_temp_91: sensor.growatt_solar_inverter_temp
+  dc_transformer_temp_90: sensor.growatt_dc_dc_temperature
 
   # Battery
-  battery_voltage_183: sensor.growatt_battery_voltage
-  battery_soc_184: sensor.growatt_battery_soc
-  battery_power_190: sensor.growatt_battery_power
+  # SPF regs: battery_voltage(17), battery_soc(18), battery_power(77+78), battery_current(68)
+  # NOTE: battery_current measures current only during AC charging (hw limitation of SPF)
+  battery_voltage_183: sensor.growatt_battery_battery_voltage
+  battery_soc_184: sensor.growatt_battery_battery_soc
+  battery_power_190: sensor.growatt_battery_battery_power
   battery_current_191: sensor.growatt_battery_current_calculated
-  day_grid_import_76: sensor.growatt_battery_charge_today
+  # SPF regs 56+57: charge_energy_today = AC charging only (from grid/generator)
+  day_grid_import_76: sensor.growatt_battery_ac_charge_energy_today
   day_grid_export_77: ~
-  day_battery_charge_70: sensor.growatt_battery_charge_today
-  day_battery_discharge_71: sensor.growatt_battery_discharge_today
+  day_battery_charge_70: sensor.growatt_battery_battery_charge_today
+  day_battery_discharge_71: sensor.growatt_battery_battery_discharge_today
 
-  # Grid
-  grid_voltage_150: sensor.growatt_grid_voltage
+  # Grid = total Shelly (all 3 phases)
+  grid_voltage_150: sensor.growatt_grid_grid_voltage
   grid_ct_power_172: sensor.shelly_pro3em_total_active_power
   grid_ct_power_L2: sensor.shelly_pro3em_phase_a_active_power
   grid_ct_power_L3: sensor.shelly_pro3em_phase_b_active_power

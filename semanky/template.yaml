@@ -41,8 +41,8 @@
     device_class: current
     state_class: measurement
     state: >-
-      {% set voltage = states('sensor.growatt_battery_voltage') | float(0) %}
-      {% set power = states('sensor.growatt_battery_power') | float(0) %}
+      {% set voltage = states('sensor.growatt_battery_battery_voltage') | float(0) %}
+      {% set power = states('sensor.growatt_battery_battery_power') | float(0) %}
       {% if voltage > 0 %}
         {{ (power / voltage * -1) | round(1) }}
       {% else %}
