@@ -84,7 +84,7 @@ entities:
   # SPF regs 56+57: charge_energy_today = AC charging only (from grid/generator)
   day_grid_import_76: sensor.growatt_battery_ac_charge_energy_today
   day_grid_export_77: ~
-  day_battery_charge_70: sensor.growatt_battery_battery_charge_today
+  day_battery_charge_70: sensor.battery_charge_daily
   day_battery_discharge_71: sensor.growatt_battery_battery_discharge_today
 
   # Grid = total Shelly (all 3 phases)

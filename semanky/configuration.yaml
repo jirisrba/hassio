@@ -12,6 +12,9 @@ utility_meter:
   grid_import_energy_daily:
     source: sensor.shelly_pro3em_total_active_energy
     cycle: daily
+  battery_charge_daily:
+    source: sensor.growatt_battery_charge_total
+    cycle: daily
 
 sensor:
   - platform: history_stats
@@ -21,6 +24,17 @@ sensor:
     type: time
     start: "{{ today_at() }}"
     end: "{{ now() }}"
+
+  # Battery charge total energy - integrated from existing battery_charge_power sensor
+  # sensor.growatt_battery_battery_charge_power is always positive (charging only)
+  - platform: integration
+    source: sensor.growatt_battery_battery_charge_power
+    name: Growatt Battery Charge Total
+    unique_id: growatt_battery_charge_total
+    unit_prefix: k
+    unit_time: h
+    round: 3
+    method: trapezoidal
 
 # Loads default set of integrations. Do not remove.
 default_config:
