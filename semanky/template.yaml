@@ -48,3 +48,16 @@
       {% else %}
         0
       {% endif %}
+
+  # Solar Optimizer: battery net power (positive=discharge, negative=charge)
+  # Sign chain:
+  #   SPF hardware modbus:  +discharge / -charge
+  #   growatt integration:  inverts via scale=-0.1 → +charge / -discharge  (HA standard)
+  #   Solar Optimizer needs: +discharge / -charge  → invert again * -1
+  - name: "Growatt Battery Net Power SO"
+    unique_id: growatt_battery_net_power_so
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    state: >-
+      {{ (states('sensor.growatt_battery_battery_power') | float(0) * -1) | round(1) }}

@@ -4,6 +4,30 @@ homeassistant:
   country: CZ
   time_zone: Europe/Prague
 
+# Energy prices for Solar Optimizer
+input_number:
+  energy_buy_price:
+    name: "Cena nakupu elektriny (CZK/kWh)"
+    min: 0
+    max: 20
+    step: 0.01
+    unit_of_measurement: "CZK/kWh"
+    icon: mdi:currency-usd
+  energy_sell_price:
+    name: "Cena prodeje elektriny (CZK/kWh)"
+    min: 0
+    max: 20
+    step: 0.01
+    unit_of_measurement: "CZK/kWh"
+    icon: mdi:transmission-tower-export
+  energy_sell_tax_percent:
+    name: "Dan z prodeje elektriny (%)"
+    min: 0
+    max: 100
+    step: 0.1
+    unit_of_measurement: "%"
+    icon: mdi:percent
+
 # Utility meter
 utility_meter:
   grid_export_energy_daily:
@@ -43,7 +67,7 @@ default_config:
 frontend:
   themes: !include_dir_merge_named themes
 
-# modbus: !include modbus.yaml
+modbus: !include modbus.yaml
 
 automation: !include automations.yaml
 script: !include scripts.yaml
