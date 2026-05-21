@@ -61,3 +61,29 @@
     state_class: measurement
     state: >-
       {{ (states('sensor.growatt_battery_battery_power') | float(0) * -1) | round(1) }}
+
+- binary_sensor:
+  # GBO K1 Pool Pump (bit 0 of RelaisStatus reg 10)
+  - name: "GBO K1 Pool Pump"
+    unique_id: gbo_k1_pool_pump
+    device_class: running
+    state: >-
+      {{ (states('sensor.gbo_relay_status_raw') | int(0) | bitwise_and(1)) > 0 }}
+
+  # GBO K2 Pool Heating (bit 1 of RelaisStatus reg 10)
+  - name: "GBO K2 Pool Heating"
+    unique_id: gbo_k2_pool_heating
+    device_class: running
+    state: >-
+      {{ (states('sensor.gbo_relay_status_raw') | int(0) | bitwise_and(2)) > 0 }}
+
+- sensor:
+  # GBO SSR Boiler Output - lower byte of raw SSR register (0-255 → 0-100%)
+  - name: "GBO SSR Boiler Output"
+    unique_id: gbo_ssr_boiler_output
+    unit_of_measurement: "%"
+    device_class: power_factor
+    state_class: measurement
+    icon: mdi:water-boiler
+    state: >-
+      {{ ((states('sensor.gbo_ssr_raw') | int(0)) | bitwise_and(255) / 255 * 100) | round(0) }}
