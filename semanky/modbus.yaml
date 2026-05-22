@@ -69,14 +69,25 @@
   # RelaisStatus holding reg 10: bit0=K1, bit1=K2, bit2=K3
 
   switches:
-    # ExternControl - Solar Optimizer / ruční override
-    # Zapnuto = regulace (GBO řídí SSR autonomně dle přebytků)
-    # Vypnuto = vše vypnuto (bojler off)
+    # ExternControl - ruční override / regulace
+    # ON  = 0xBF00 = zapnout vše natvrdo
+    # OFF = 0x3F00 = regulace (GBO řídí SSR autonomně dle přebytků)
     # Zápis do RAM (addr 14) = neomezený počet zápisů!
     - name: GBO Enable All
       unique_id: gbo_enable_all
       slave: 3
       address: 14
       write_type: holding
-      command_on: 16128   # 0x3F00 = regulace (GBO solar router mód)
+      command_on: 49152   # 0xBF00 = zapnout vše
+      command_off: 16128  # 0x3F00 = regulace
+
+    # Solar Optimizer / vypnutí bojleru
+    # ON  = 0x3F00 = regulace (GBO solar router mód)
+    # OFF = 0x7F00 = vypnout vše
+    - name: GBO Boiler Enable
+      unique_id: gbo_boiler_enable
+      slave: 3
+      address: 14
+      write_type: holding
+      command_on: 16128   # 0x3F00 = regulace
       command_off: 32512  # 0x7F00 = vypnout vše
