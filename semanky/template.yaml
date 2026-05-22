@@ -52,7 +52,39 @@
     state: >-
       {{ (states('sensor.growatt_battery_battery_power') | float(0) * -1) | round(1) }}
 
-- binary_sensor:
+  # GBO dovoleny odber ze site - horni byte EEUdcPIParam (addr 100)
+  # Nelinearni scale: hi=139 ~ 12.14A, hi=129 ~ 15.06A
+  # Pouze pro monitoring - pro zapis pouzij GreenBono HMI
+  - name: "GBO Grid Import Limit Raw"
+    unique_id: gbo_grid_import_limit_raw
+    state_class: measurement
+    icon: mdi:transmission-tower-import
+    state: >-
+      {{ (states('sensor.gbo_eeudcpiparam_raw') | int(0) >> 8) & 255 }}
+
+  # GBO max nabijeci proud baterie - horni byte EEIzadLimit (addr 102)
+  # scale: 1 digit = 0.4 A
+  - name: "GBO Battery Charge Current Limit"
+    unique_id: gbo_battery_charge_current_limit
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    icon: mdi:current-dc
+    state: >-
+      {{ ((states('sensor.gbo_eeizadlimit_raw') | int(0) >> 8) & 255) * 0.4 | round(1) }}
+
+  # GBO SOC* regulační cíl - dolní byte EEUdcZadaná (addr 98)
+  # Hodnota 0-255 odpovídá 0-100% SOC
+  - name: "GBO SOC Target"
+    unique_id: gbo_soc_target
+    unit_of_measurement: "%"
+    device_class: battery
+    state_class: measurement
+    icon: mdi:battery-charging-90
+    state: >-
+      {{ (states('sensor.gbo_eeudczadana_raw') | int(0)) & 255 }}
+
+
   # GBO K1 Pool Pump (bit 0 of RelaisStatus reg 10)
   - name: "GBO K1 Pool Pump"
     unique_id: gbo_k1_pool_pump
