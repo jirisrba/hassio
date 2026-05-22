@@ -1,0 +1,150 @@
+type: vertical-stack
+cards:
+  # === HLAVIČKA ===
+  - type: custom:mushroom-template-card
+    primary: GBO-Aku
+    secondary: >-
+      {% set state = states('sensor.gbo_extern_control_state') | int(0) %}
+      {% if state == 49152 %}Vše zapnuto (manual)
+      {% elif state == 16128 %}Regulace (solar router)
+      {% elif state == 32512 %}Vše vypnuto
+      {% else %}Stav: {{ state }}{% endif %}
+    icon: mdi:solar-power-variant
+    icon_color: >-
+      {% set state = states('sensor.gbo_extern_control_state') | int(0) %}
+      {% if state == 16128 %}green{% elif state == 49152 %}orange{% else %}red{% endif %}
+    badge_icon: >-
+      {% set soc = states('sensor.gbo_battery_soc') | float(0) %}
+      {% if soc > 80 %}mdi:battery-high
+      {% elif soc > 40 %}mdi:battery-medium
+      {% else %}mdi:battery-low{% endif %}
+    badge_color: >-
+      {% set soc = states('sensor.gbo_battery_soc') | float(0) %}
+      {% if soc > 80 %}green{% elif soc > 40 %}orange{% else %}red{% endif %}
+
+  # === BATERIE ===
+  - type: horizontal-stack
+    cards:
+      - type: custom:mushroom-template-card
+        primary: SOC baterie
+        secondary: "{{ states('sensor.gbo_battery_soc') }} %"
+        icon: >-
+          {% set soc = states('sensor.gbo_battery_soc') | float(0) %}
+          {% if soc > 80 %}mdi:battery-high
+          {% elif soc > 40 %}mdi:battery-medium
+          {% else %}mdi:battery-low{% endif %}
+        icon_color: >-
+          {% set soc = states('sensor.gbo_battery_soc') | float(0) %}
+          {% if soc > 80 %}green{% elif soc > 40 %}orange{% else %}red{% endif %}
+
+      - type: custom:mushroom-template-card
+        primary: SOC Growatt
+        secondary: "{{ states('sensor.growatt_battery_battery_soc') }} %"
+        icon: mdi:battery-charging
+        icon_color: >-
+          {% set soc = states('sensor.growatt_battery_battery_soc') | float(0) %}
+          {% if soc > 80 %}green{% elif soc > 40 %}orange{% else %}red{% endif %}
+
+  - type: gauge
+    entity: sensor.gbo_battery_soc
+    name: SOC baterie (GBO)
+    unit: "%"
+    min: 0
+    max: 100
+    needle: true
+    segments:
+      - from: 0
+        color: "#F44336"
+      - from: 20
+        color: "#FFC107"
+      - from: 60
+        color: "#4CAF50"
+      - from: 90
+        color: "#2196F3"
+
+  # === NAPĚTÍ A PROUD BATERIE ===
+  - type: horizontal-stack
+    cards:
+      - type: custom:mushroom-template-card
+        primary: Napětí baterie
+        secondary: "{{ states('sensor.growatt_battery_battery_voltage') }} V"
+        icon: mdi:flash-triangle
+        icon_color: gray
+
+      - type: custom:mushroom-template-card
+        primary: Výkon baterie
+        secondary: >-
+          {% set p = states('sensor.growatt_battery_battery_power') | float(0) %}
+          {% if p > 0 %}+{{ p | round(0) }} W (nabíjení)
+          {% else %}{{ p | round(0) }} W (vybíjení){% endif %}
+        icon: >-
+          {% set p = states('sensor.growatt_battery_battery_power') | float(0) %}
+          {% if p > 0 %}mdi:battery-charging{% else %}mdi:battery-minus{% endif %}
+        icon_color: >-
+          {% set p = states('sensor.growatt_battery_battery_power') | float(0) %}
+          {% if p > 0 %}green{% else %}orange{% endif %}
+
+  # === SÍŤ L1 ===
+  - type: horizontal-stack
+    cards:
+      - type: custom:mushroom-template-card
+        primary: Napětí L1
+        secondary: "{{ states('sensor.gbo_voltage_l1') }} V"
+        icon: mdi:sine-wave
+        icon_color: blue
+
+      - type: custom:mushroom-template-card
+        primary: Proud L1
+        secondary: >-
+          {% set i = states('sensor.gbo_current_l1') | float(0) %}
+          {% if i < 0 %}{{ i }} A (export)
+          {% else %}{{ i }} A (odběr){% endif %}
+        icon: mdi:current-ac
+        icon_color: >-
+          {% set i = states('sensor.gbo_current_l1') | float(0) %}
+          {% if i < 0 %}green{% else %}orange{% endif %}
+
+      - type: custom:mushroom-template-card
+        primary: Proud celkem
+        secondary: "{{ states('sensor.gbo_current_total') }} A"
+        icon: mdi:sigma
+        icon_color: gray
+
+  # === SSR A RELÉ ===
+  - type: horizontal-stack
+    cards:
+      - type: custom:mushroom-template-card
+        primary: SSR Bojler
+        secondary: "{{ states('sensor.gbo_ssr_boiler_output') | round(0) }} %"
+        icon: mdi:water-boiler
+        icon_color: >-
+          {% if states('sensor.gbo_ssr_boiler_output') | float(0) > 0 %}orange{% else %}lightgray{% endif %}
+
+      - type: custom:mushroom-template-card
+        primary: K1 Čerpadlo
+        secondary: >-
+          {% if is_state('binary_sensor.gbo_k1_pool_pump', 'on') %}Zapnuto{% else %}Vypnuto{% endif %}
+        icon: mdi:water-pump
+        icon_color: >-
+          {% if is_state('binary_sensor.gbo_k1_pool_pump', 'on') %}blue{% else %}lightgray{% endif %}
+
+      - type: custom:mushroom-template-card
+        primary: K2 Ohřev
+        secondary: >-
+          {% if is_state('binary_sensor.gbo_k2_pool_heating', 'on') %}Zapnuto{% else %}Vypnuto{% endif %}
+        icon: mdi:heat-pump
+        icon_color: >-
+          {% if is_state('binary_sensor.gbo_k2_pool_heating', 'on') %}red{% else %}lightgray{% endif %}
+
+  # === KONFIGURACE ===
+  - type: custom:mushroom-template-card
+    primary: Konfigurace GBO
+    secondary: >-
+      SOC* cíl: {{ states('sensor.gbo_soc_target') }}%  |
+      Max I bat: {{ states('sensor.gbo_battery_charge_current_limit') }} A  |
+      Odběr sítě raw: {{ states('sensor.gbo_grid_import_limit_raw') }}
+    icon: mdi:cog
+    icon_color: gray
+    tap_action:
+      action: more-info
+      entity: sensor.gbo_soc_target

@@ -60,7 +60,7 @@
     state_class: measurement
     icon: mdi:transmission-tower-import
     state: >-
-      {{ (states('sensor.gbo_eeudcpiparam_raw') | int(0) >> 8) & 255 }}
+      {{ ((states('sensor.gbo_eeudcpiparam_raw') | int(0)) // 256) & 255 }}
 
   # GBO max nabijeci proud baterie - horni byte EEIzadLimit (addr 102)
   # scale: 1 digit = 0.4 A
@@ -71,7 +71,7 @@
     state_class: measurement
     icon: mdi:current-dc
     state: >-
-      {{ ((states('sensor.gbo_eeizadlimit_raw') | int(0) >> 8) & 255) * 0.4 | round(1) }}
+      {{ (((states('sensor.gbo_eeizadlimit_raw') | int(0)) // 256) & 255) * 0.4 | round(1) }}
 
   # GBO SOC* regulační cíl - dolní byte EEUdcZadaná (addr 98)
   # Hodnota 0-255 odpovídá 0-100% SOC
