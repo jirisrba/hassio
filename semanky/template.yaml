@@ -1,17 +1,7 @@
 - sensor:
-  # Pool pump running power estimate
-  - name: "Pool pump power"
-    unit_of_measurement: W
-    state: >-
-      {% if is_state('binary_sensor.greenbono_k1_pool_pump', 'on') %}
-        450
-      {% else %}
-        0
-      {% endif %}
-
   - name: pool pump icon
     state: >-
-      {% if is_state('binary_sensor.greenbono_k1_pool_pump', 'on') %}
+      {% if is_state('binary_sensor.gbo_k1_pool_pump', 'on') %}
         mdi:water-pump
       {% else %}
         mdi:water-pump-off

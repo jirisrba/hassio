@@ -43,7 +43,7 @@ utility_meter:
 sensor:
   - platform: history_stats
     name: Cerpadlo run time
-    entity_id: binary_sensor.greenbono_k1_pool_pump
+    entity_id: binary_sensor.gbo_k1_pool_pump
     state: "on"
     type: time
     start: "{{ today_at() }}"

@@ -11,7 +11,6 @@
   port: 6770
   message_wait_milliseconds: 350  # GBO-Aku doc: min 350ms response window
   timeout: 3                       # seconds, RTU over TCP needs extra time
-  scan_interval: 600               # every 10 min - avoid collisions with GBO↔inverter traffic
 
   sensors:
     # Current L1 (kalibrovaná hodnota) [deciAmpéry]
@@ -45,6 +44,50 @@
       address: 18
       input_type: input
       data_type: uint16
+      precision: 0
+
+    # Total current L1+L2+L3 sum (signed - negative = surplus/export)
+    - name: GBO Current Total
+      unique_id: gbo_current_total
+      device_class: current
+      unit_of_measurement: A
+      slave: 3
+      address: 14
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    # Current through SSR (boiler) - useful for power monitoring
+    - name: GBO Current SSR
+      unique_id: gbo_current_ssr
+      device_class: current
+      unit_of_measurement: A
+      slave: 3
+      address: 26
+      input_type: input
+      data_type: int16
+      scale: 0.1
+      precision: 1
+
+    # Battery SOC from GBO (raw value, no DC sensors needed)
+    - name: GBO Battery SOC
+      unique_id: gbo_battery_soc
+      device_class: battery
+      unit_of_measurement: "%"
+      slave: 3
+      address: 74
+      input_type: input
+      data_type: uint16
+      precision: 0
+
+    # Battery current raw (-512...511 digits) - possibly charging current
+    - name: GBO Battery Current Raw
+      unique_id: gbo_battery_current_raw
+      slave: 3
+      address: 78
+      input_type: input
+      data_type: int16
       precision: 0
 
     # ExternControl - aktuální hodnota (pro diagnostiku)
