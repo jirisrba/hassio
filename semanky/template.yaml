@@ -85,6 +85,7 @@
       {{ (states('sensor.gbo_eeudczadana_raw') | int(0)) | bitwise_and(255) }}
 
 
+- binary_sensor:
   # GBO K1 Pool Pump (bit 0 of RelaisStatus reg 10)
   - name: "GBO K1 Pool Pump"
     unique_id: gbo_k1_pool_pump

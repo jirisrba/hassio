@@ -7,19 +7,17 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.growatt_battery_battery_soc
-      above: 80
-      for:
-        minutes: 5
+      above: 50
       id: switch_mycka_on
     - platform: numeric_state
       entity_id: sensor.growatt_battery_battery_soc
-      below: 50
+      below: 35
       id: switch_mycka_off
     - platform: time
       at: "12:00:00"
       id: switch_mycka_noon
     - platform: time
-      at: "20:00:00"
+      at: "22:00:00"
       id: switch_mycka_evening
   condition:
     - condition: numeric_state
@@ -58,6 +56,26 @@
         sequence:
           - service: switch.turn_off
             entity_id: switch.mycka
+
+- id: gbo_modbus_stop_sunset
+  alias: "GBO modbus stop - sunset -1h"
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: "-02:00:00"
+  action:
+    - action: modbus.stop
+      data:
+        hub: greenbono
+
+- id: gbo_modbus_start_sunrise
+  alias: "GBO modbus start - sunrise +3h"
+  trigger:
+    - platform: sun
+      event: sunrise
+      offset: "+03:00:00"
+  action:
+    - action: modbus.reload
 
 # =============================================================================
 # BOJLER - INSPIRACE (zatím neaktivní, odkomentuj až budeš chtít použít)
