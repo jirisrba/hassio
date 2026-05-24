@@ -57,23 +57,150 @@
           - service: switch.turn_off
             entity_id: switch.mycka
 
-- id: gbo_modbus_stop_sunset
-  alias: "GBO modbus stop - sunset -1h"
+# =============================================================================
+# WATCHDOG - RS485 prevodnik restart
+# Pokud je sensor nedostupny 5+ minut a switch.solar je zapnuty,
+# provede restart vypnutim/zapnutim switch.solar (power-cycle prevodniku).
+# mode: single zajisti ze bezi max jeden restart najednou.
+# =============================================================================
+
+- id: watchdog_rs485_growatt
+  alias: "Watchdog - RS485 restart (Growatt SOC nedostupny)"
+  description: >
+    Pokud je sensor.growatt_battery_battery_soc nedostupny 5 minut,
+    restartuje modbus gateway pres HTTP. Pokud HTTP selze,
+    provede power-cycle pres switch.solar.
+    Plati jen kdyz je switch.solar zapnuty.
   trigger:
-    - platform: sun
-      event: sunset
-      offset: "-02:00:00"
+    - platform: state
+      entity_id: sensor.growatt_battery_battery_soc
+      to: "unavailable"
+      for:
+        minutes: 5
+  condition:
+    - condition: state
+      entity_id: switch.solar
+      state: "on"
+  action:
+    - alias: "Loguj restart"
+      service: system_log.write
+      data:
+        message: "Watchdog: Growatt SOC nedostupny 5 min, restartuji modbus gateway pres HTTP"
+        level: warning
+    # - alias: "HTTP restart modbus gateway"
+    #   service: rest_command.reboot_modbus_gateway
+    # - alias: "Cekej 60s na obnovu po HTTP restartu"
+    #   delay:
+    #     seconds: 60
+    # - alias: "Zkontroluj zda se sensor obnovil"
+    #   if:
+    #     - condition: state
+    #       entity_id: sensor.growatt_battery_battery_soc
+    #       state: "unavailable"
+    #   then:
+    #     - alias: "Stale nedostupny - fallback power-cycle pres switch.solar"
+    #       service: system_log.write
+    #       data:
+    #         message: "Watchdog: Growatt SOC stale nedostupny po HTTP restartu, power-cycle switch.solar"
+    #         level: error
+    - service: switch.turn_off
+      target:
+        entity_id: switch.solar
+    - delay:
+        seconds: 5
+    - service: switch.turn_on
+      target:
+        entity_id: switch.solar
+    - alias: "Cekej az se sensor obnovi (max 10 min), pak uvolni"
+      wait_for_trigger:
+        - platform: state
+          entity_id: sensor.growatt_battery_battery_soc
+          not_to:
+            - "unavailable"
+            - "unknown"
+      timeout:
+        minutes: 10
+      continue_on_timeout: true
+  mode: single
+  max_exceeded: silent
+
+- id: watchdog_rs485_gbo
+  alias: "Watchdog - RS485 restart (GBO SOC nedostupny)"
+  description: >
+    Pokud je sensor.gbo_battery_soc nedostupny 5 minut,
+    restartuje modbus gateway pres HTTP. Pokud HTTP selze,
+    provede power-cycle pres switch.solar.
+    Plati jen kdyz je switch.solar zapnuty.
+  trigger:
+    - platform: state
+      entity_id: sensor.gbo_battery_soc
+      to: "unavailable"
+      for:
+        minutes: 5
+  condition:
+    - condition: state
+      entity_id: switch.solar
+      state: "on"
+  action:
+    - alias: "Loguj restart"
+      service: system_log.write
+      data:
+        message: "Watchdog: GBO SOC nedostupny 5 min, restartuji modbus gateway pres HTTP"
+        level: warning
+    # - alias: "HTTP restart modbus gateway"
+    #   service: rest_command.reboot_modbus_gateway
+    # - alias: "Cekej 60s na obnovu po HTTP restartu"
+    #   delay:
+    #     seconds: 60
+    # - alias: "Zkontroluj zda se sensor obnovil"
+    #   if:
+    #     - condition: state
+    #       entity_id: sensor.gbo_battery_soc
+    #       state: "unavailable"
+    #   then:
+    #     - alias: "Stale nedostupny - fallback power-cycle pres switch.solar"
+    #       service: system_log.write
+    #       data:
+    #         message: "Watchdog: GBO SOC stale nedostupny po HTTP restartu, power-cycle switch.solar"
+    #         level: error
+    - service: switch.turn_off
+      target:
+        entity_id: switch.solar
+    - delay:
+        seconds: 5
+    - service: switch.turn_on
+      target:
+        entity_id: switch.solar
+    - alias: "Cekej az se sensor obnovi (max 10 min), pak uvolni"
+      wait_for_trigger:
+        - platform: state
+          entity_id: sensor.gbo_battery_soc
+          not_to:
+            - "unavailable"
+            - "unknown"
+      timeout:
+        minutes: 10
+      continue_on_timeout: true
+  mode: single
+  max_exceeded: silent
+
+- id: gbo_modbus_stop_sunset
+  alias: "GBO modbus stop - switch.solar off"
+  trigger:
+    - platform: state
+      entity_id: switch.solar
+      to: "off"
   action:
     - action: modbus.stop
       data:
         hub: greenbono
 
 - id: gbo_modbus_start_sunrise
-  alias: "GBO modbus start - sunrise +3h"
+  alias: "GBO modbus start - switch.solar on"
   trigger:
-    - platform: sun
-      event: sunrise
-      offset: "+03:00:00"
+    - platform: state
+      entity_id: switch.solar
+      to: "on"
   action:
     - action: modbus.reload
 

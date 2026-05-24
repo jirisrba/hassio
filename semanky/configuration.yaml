@@ -78,6 +78,12 @@ frontend:
 
 modbus: !include modbus.yaml
 
+rest_command:
+  reboot_modbus_gateway:
+    url: "http://192.168.2.20/api/reboot"
+    method: GET
+    timeout: 10
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
