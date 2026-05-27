@@ -1,61 +1,51 @@
 ---
 # automations.yaml
 
-- id: switch_mycka
-  alias: "Switch mycka on/off"
-  description: "Switch mycka: SOC-based, forced ON at 12:00, SOC check at 20:00"
+- id: switch_mycka_on
+  alias: "Mycka - zapni"
+  description: "Zapni mycku kdyz SOC > 50, v poledne, nebo solar > 1kW po dobu 5 min"
   trigger:
     - platform: numeric_state
       entity_id: sensor.growatt_battery_battery_soc
       above: 50
-      id: switch_mycka_on
-    - platform: numeric_state
-      entity_id: sensor.growatt_battery_battery_soc
-      below: 35
-      id: switch_mycka_off
     - platform: time
       at: "12:00:00"
-      id: switch_mycka_noon
-    - platform: time
-      at: "22:00:00"
-      id: switch_mycka_evening
+    - platform: numeric_state
+      entity_id: sensor.growatt_solar_solar_total_power
+      above: 1500
+      for:
+        minutes: 5
   condition:
+    - condition: state
+      entity_id: switch.mycka
+      state: "off"
     - condition: numeric_state
       entity_id: sensor.mycka_power
       below: 10
   action:
-    - choose:
-      - conditions:
-          - condition: trigger
-            id: switch_mycka_on
-        sequence:
-          - service: switch.turn_on
-            entity_id: switch.mycka
-      - conditions:
-          - condition: trigger
-            id: switch_mycka_off
-          # SOC vypnutí jen mimo poledne-večer
-          - condition: time
-            after: "20:00:00"
-            before: "12:00:00"
-        sequence:
-          - service: switch.turn_off
-            entity_id: switch.mycka
-      - conditions:
-          - condition: trigger
-            id: switch_mycka_noon
-        sequence:
-          - service: switch.turn_on
-            entity_id: switch.mycka
-      - conditions:
-          - condition: trigger
-            id: switch_mycka_evening
-          - condition: numeric_state
-            entity_id: sensor.growatt_battery_battery_soc
-            below: 50
-        sequence:
-          - service: switch.turn_off
-            entity_id: switch.mycka
+    - service: switch.turn_on
+      entity_id: switch.mycka
+
+- id: switch_mycka_off
+  alias: "Mycka - vypni"
+  description: "Vypni mycku kdyz SOC < 35 v noci (20:00-12:00)"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.growatt_battery_battery_soc
+      below: 35
+  condition:
+    - condition: state
+      entity_id: switch.mycka
+      state: "on"
+    - condition: numeric_state
+      entity_id: sensor.mycka_power
+      below: 10
+    - condition: time
+      after: "20:00:00"
+      before: "12:00:00"
+  action:
+    - service: switch.turn_off
+      entity_id: switch.mycka
 
 # =============================================================================
 # WATCHDOG - RS485 prevodnik restart
@@ -183,6 +173,74 @@
       continue_on_timeout: true
   mode: single
   max_exceeded: silent
+
+# =============================================================================
+# GBO ExternControl - input_select → modbus zápis
+# Při změně input_select.gbo_extern_control zapíše správnou hodnotu na addr 14
+# RAM registr = neomezený počet zápisů
+# =============================================================================
+
+- id: gbo_extern_control_write
+  alias: "GBO - write ExternControl from input_select"
+  description: >
+    On input_select.gbo_extern_control change, writes to modbus addr 14 (RAM):
+    regulation=16128 (0x3F00), force_on=48896 (0xBF00), force_off=32512 (0x7F00)
+  trigger:
+    - platform: state
+      entity_id: input_select.gbo_extern_control
+  action:
+    - service: modbus.write_register
+      data:
+        hub: greenbono
+        slave: 3
+        address: 14
+        value: >
+          {% set values = {
+            'force_on':   "0xBF00" | int(0, 16),
+            'force_off':  "0x7F00" | int(0, 16),
+            'regulation': "0x3F00" | int(0, 16)
+          } %}
+          {{ values.get(trigger.to_state.state, "0x3F00" | int(0, 16)) }}
+  mode: single
+
+# =============================================================================
+# GBO ExternControl - sync z GBO senzoru → input_select
+# Pokud se hodnota v GBO změní externě (ručně, restart), synchronizuje HA UI
+# =============================================================================
+
+- id: gbo_extern_control_sync
+  alias: "GBO - sync ExternControl sensor → input_select"
+  description: >
+    If sensor.gbo_extern_control_state changes outside HA
+    (GBO restart, manual change), syncs input_select.gbo_extern_control
+  trigger:
+    - platform: state
+      entity_id: sensor.gbo_extern_control_state
+  condition:
+    - condition: template
+      value_template: >
+        {% set val = trigger.to_state.state | int(0) %}
+        {% set mode = states('input_select.gbo_extern_control') %}
+        {% set expected = {
+          'regulation': "0x3F00" | int(0, 16),
+          'force_on':   "0xBF00" | int(0, 16),
+          'force_off':  "0x7F00" | int(0, 16)
+        } %}
+        {{ val != expected.get(mode, -1) }}
+  action:
+    - service: input_select.select_option
+      target:
+        entity_id: input_select.gbo_extern_control
+      data:
+        option: >
+          {% set val = trigger.to_state.state | int(0) %}
+          {% set modes = {
+            "0xBF00" | int(0, 16): 'force_on',
+            "0x7F00" | int(0, 16): 'force_off',
+            "0x3F00" | int(0, 16): 'regulation'
+          } %}
+          {{ modes.get(val, 'regulation') }}
+  mode: single
 
 - id: gbo_modbus_stop_sunset
   alias: "GBO modbus stop - switch.solar off"
