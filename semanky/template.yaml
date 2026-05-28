@@ -58,6 +58,18 @@
     state: >-
       {{ ((states('sensor.gbo_eeudcpiparam_raw') | int(0)) // 256) | bitwise_and(255) }}
 
+  # GBO max proud invertoru - prepocet z raw hi byte
+  # Vzorec odvozen z mereni: hi=129→15.06A, hi=139→12.14A
+  # A = 52.728 - 0.292 × hi  (pozor: pouze 2 body, nelinearita mozna mimo rozsah)
+  - name: "GBO Inverter Current Limit"
+    unique_id: gbo_inverter_current_limit
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    icon: mdi:transmission-tower-import
+    state: >-
+      {{ (52.728 - 0.292 * (states('sensor.gbo_grid_import_limit_raw') | float(0))) | round(1) }}
+
   # GBO max nabijeci proud baterie - horni byte EEIzadLimit (addr 102)
   # scale: 1 digit = 0.4 A
   - name: "GBO Battery Charge Current Limit"
