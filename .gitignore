@@ -5,9 +5,19 @@ core_git_pull.yaml
 emulated_hue_ids.json
 
 # Ignore folders.
-.storage
-.cloud
+.storage/
+.cloud/
 .google.token
+.cache/
+blueprints/
+custom_components/
+www/
+
+# HA runtime files
+.HA_VERSION
+.ha_run.lock
+home-assistant.log*
+home-assistant_v2.db*
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml
