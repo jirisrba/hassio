@@ -59,7 +59,6 @@
   description: >
     Pokud je sensor.growatt_battery_battery_soc nedostupny 5 minut,
     restartuje modbus TCP/RTU bridge pres button.
-    Plati jen kdyz je switch.solar zapnuty.
   trigger:
     - platform: state
       entity_id: sensor.growatt_battery_battery_soc
@@ -94,7 +93,7 @@
   alias: "Watchdog - RS485 restart (GBO SOC nedostupny)"
   description: >
     Pokud je sensor.gbo_battery_soc nedostupny 5 minut,
-    restartuje modbus TCP/RTU bridge pres button.
+    restartuje GBO pres solar switch (power-cycle)
     Plati jen kdyz je switch.solar zapnuty.
   trigger:
     - platform: state
@@ -223,44 +222,3 @@
       to: "on"
   action:
     - action: modbus.reload
-
-# =============================================================================
-# BOJLER - INSPIRACE (zatím neaktivní, odkomentuj až budeš chtít použít)
-# =============================================================================
-
-# Strategie 1: Dump load — bojler jako přebytek když je baterka plná
-# Logika: SOC >= 95 % → zapnout bojler, SOC < 85 % → vypnout
-# Vhodné pro: maximální využití solaru, baterka má přednost
-
-- id: boiler_dump_load
-  alias: "Boiler - dump load when battery full"
-  description: "Use boiler as dump load when battery SOC >= 95%"
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.growatt_battery_battery_soc
-      above: 95
-      for:
-        minutes: 2
-      id: boiler_on
-    - platform: numeric_state
-      entity_id: sensor.growatt_battery_battery_soc
-      below: 85
-      id: boiler_off
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.siton210_temperature
-      below: 70                          # nepřehřívat
-  action:
-    - choose:
-      - conditions:
-          - condition: trigger
-            id: boiler_on
-        sequence:
-          - service: switch.turn_on
-            entity_id: switch.greenbono_ssr_boiler
-      - conditions:
-          - condition: trigger
-            id: boiler_off
-        sequence:
-          - service: switch.turn_off
-            entity_id: switch.greenbono_ssr_boiler
