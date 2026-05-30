@@ -66,20 +66,24 @@
       to: "unavailable"
       for:
         minutes: 5
-  condition:
-    - condition: state
-      entity_id: switch.solar
-      state: "on"
+  condition: []
   action:
     - alias: "Loguj restart"
       service: system_log.write
       data:
-        message: "Watchdog: Growatt SOC nedostupny 5 min, restartuji modbus bridge"
+        message: "Watchdog: Growatt SOC nedostupny 5 min, restartuji solar switch"
         level: warning
-    - alias: "Restart modbus TCP/RTU bridge"
-      service: button.press
+    - alias: "Vypni solar switch"
+      service: switch.turn_off
       target:
-        entity_id: button.modbus_tcp_rtu_bridge_restart
+        entity_id: switch.solar
+    - alias: "Cekej 10 sekund"
+      delay:
+        seconds: 10
+    - alias: "Zapni solar switch"
+      service: switch.turn_on
+      target:
+        entity_id: switch.solar
     - alias: "Cekej az se sensor obnovi (max 10 min)"
       wait_for_trigger:
         - platform: state
@@ -113,12 +117,19 @@
     - alias: "Loguj restart"
       service: system_log.write
       data:
-        message: "Watchdog: GBO SOC nedostupny 5 min, restartuji modbus bridge"
+        message: "Watchdog: GBO SOC nedostupny 5 min, restartuji solar switch"
         level: warning
-    - alias: "Restart modbus TCP/RTU bridge"
-      service: button.press
+    - alias: "Vypni solar switch"
+      service: switch.turn_off
       target:
-        entity_id: button.modbus_tcp_rtu_bridge_restart
+        entity_id: switch.solar
+    - alias: "Cekej 10 sekund"
+      delay:
+        seconds: 10
+    - alias: "Zapni solar switch"
+      service: switch.turn_on
+      target:
+        entity_id: switch.solar
     - alias: "Cekej az se sensor obnovi (max 10 min)"
       wait_for_trigger:
         - platform: state
