@@ -16,12 +16,7 @@ cards:
       {% elif s == 11 %}Growatt: Bypass
       {% elif s == 12 %}Growatt: FV nab.+Vybíjení
       {% else %}Growatt: {{ states('sensor.growatt_status') }}{% endif %}
-    secondary: >-
-      {% set state = states('sensor.gbo_extern_control_state') | int(0) %}
-      {% if state == 48896 %}Vše zapnuto (manual)
-      {% elif state == 16128 %}Regulace (solar router)
-      {% elif state == 32512 %}Vše vypnuto
-      {% else %}Stav: {{ state }}{% endif %}
+
     icon: mdi:solar-power-variant
     icon_color: >-
       {% set state = states('sensor.gbo_extern_control_state') | int(0) %}
@@ -75,20 +70,37 @@ cards:
       - from: 90
         color: "#2196F3"
 
-  - type: gauge
-    entity: sensor.gbo_ssr_boiler_output
-    name: SSR relé
-    unit: "%"
-    min: 0
-    max: 100
-    needle: true
-    segments:
-      - from: 0
-        color: "#4CAF50"
-      - from: 30
-        color: "#FFC107"
-      - from: 70
-        color: "#F44336"
+  - type: horizontal-stack
+    cards:
+      - type: gauge
+        entity: sensor.gbo_ssr1_output
+        name: SSR1 Bojler
+        unit: "%"
+        min: 0
+        max: 100
+        needle: true
+        segments:
+          - from: 0
+            color: "#4CAF50"
+          - from: 30
+            color: "#FFC107"
+          - from: 70
+            color: "#F44336"
+
+      - type: gauge
+        entity: sensor.gbo_ssr2_output
+        name: SSR2 Spirála
+        unit: "%"
+        min: 0
+        max: 100
+        needle: true
+        segments:
+          - from: 0
+            color: "#4CAF50"
+          - from: 30
+            color: "#FFC107"
+          - from: 70
+            color: "#F44336"
 
   # === NAPĚTÍ A PROUD BATERIE ===
   - type: horizontal-stack
@@ -114,8 +126,8 @@ cards:
         primary: Výkon baterie
         secondary: >-
           {% set p = states('sensor.growatt_battery_battery_power') | float(0) %}
-          {% if p > 0 %}+{{ p | round(0) }} W (nabíjení)
-          {% else %}{{ p | round(0) }} W (vybíjení){% endif %}
+          {% if p > 0 %}-{{ p | round(0) }} W (nabíjení)
+          {% else %}+{{ (p | abs) | round(0) }} W (vybíjení){% endif %}
         icon: >-
           {% set p = states('sensor.growatt_battery_battery_power') | float(0) %}
           {% if p > 0 %}mdi:battery-charging{% else %}mdi:battery-minus{% endif %}

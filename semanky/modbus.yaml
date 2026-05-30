@@ -71,7 +71,7 @@
       data_type: uint16
       precision: 0
 
-    # SSR boiler output - reg 18: lower byte = SSR output (0-255), upper byte = SamplesCnt
+    # SSR boiler output - reg 18: upper byte = SamplesCnt, lower byte = SSR fire count (0..2*SamplesCnt)
     # bitmask not supported in HA modbus - read raw, template sensor extracts lower byte
     - name: GBO SSR Raw
       unique_id: gbo_ssr_raw

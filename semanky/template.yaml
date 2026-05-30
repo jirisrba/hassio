@@ -23,17 +23,21 @@
         mdi:dishwasher-off
       {% endif %}
 
-  # Battery current from direct modbus registers (addr 83=charge, 84=discharge)
-  # Positive = discharge, negative = charge (sunsynk card uses invert_power: true)
+  # Battery current calculated as power / voltage
+  # Positive = discharge, negative = charge (matches battery_power after invert_power: true)
   - name: "Growatt Battery Current Calculated"
     unique_id: growatt_battery_current_calculated
     unit_of_measurement: A
     device_class: current
     state_class: measurement
     state: >-
-      {% set charge = states('sensor.growatt_battery_charge_current') | float(0) %}
-      {% set discharge = states('sensor.growatt_battery_discharge_current') | float(0) %}
-      {{ (discharge - charge) | round(1) }}
+      {% set power = states('sensor.growatt_battery_battery_power') | float(0) %}
+      {% set voltage = states('sensor.growatt_battery_battery_voltage') | float(0) %}
+      {% if voltage > 0 %}
+        {{ (power / voltage * -1) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
 
   # Solar Optimizer: battery net power (positive=discharge, negative=charge)
   # Sign chain:
@@ -109,7 +113,8 @@
       {{ (states('sensor.gbo_relay_status_raw') | int(0) | bitwise_and(2)) > 0 }}
 
 - sensor:
-  # GBO SSR Boiler Output - lower byte of raw SSR register (0-255 → 0-100%)
+  # GBO SSR Boiler Output - register 18: upper byte = SamplesCnt, lower byte = OutputPI
+  # 100% = oba SSR na plno (2 * SamplesCnt), >100% = PI regulátor saturován
   - name: "GBO SSR Boiler Output"
     unique_id: gbo_ssr_boiler_output
     unit_of_measurement: "%"
@@ -117,4 +122,37 @@
     state_class: measurement
     icon: mdi:water-boiler
     state: >-
-      {{ ((states('sensor.gbo_ssr_raw') | int(0)) | bitwise_and(255) / 255 * 100) | round(0) }}
+      {% set raw = states('sensor.gbo_ssr_raw') | int(0) %}
+      {% set samples = raw // 256 %}
+      {% set fires = raw % 256 %}
+      {% if samples > 0 %}
+        {{ (fires / (2 * samples) * 100) | round(0) }}
+      {% else %}0{% endif %}
+
+  # GBO SSR1 - bojler ~2.2 kW (0-100%, saturates at SamplesCnt)
+  - name: "GBO SSR1 Output"
+    unique_id: gbo_ssr1_output
+    unit_of_measurement: "%"
+    state_class: measurement
+    icon: mdi:water-boiler
+    state: >-
+      {% set raw = states('sensor.gbo_ssr_raw') | int(0) %}
+      {% set samples = raw // 256 %}
+      {% set fires = raw % 256 %}
+      {% if samples > 0 %}
+        {{ ([fires, samples] | min / samples * 100) | round(0) }}
+      {% else %}0{% endif %}
+
+  # GBO SSR2 - spirála ~1.8 kW (0-100%, starts after SSR1 saturates)
+  - name: "GBO SSR2 Output"
+    unique_id: gbo_ssr2_output
+    unit_of_measurement: "%"
+    state_class: measurement
+    icon: mdi:heating-coil
+    state: >-
+      {% set raw = states('sensor.gbo_ssr_raw') | int(0) %}
+      {% set samples = raw // 256 %}
+      {% set fires = raw % 256 %}
+      {% if samples > 0 %}
+        {{ ([[fires - samples, 0] | max, samples] | min / samples * 100) | round(0) }}
+      {% else %}0{% endif %}
