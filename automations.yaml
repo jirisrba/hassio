@@ -71,19 +71,12 @@
     - alias: "Loguj restart"
       service: system_log.write
       data:
-        message: "Watchdog: Growatt SOC nedostupny 5 min, restartuji solar switch"
+        message: "Watchdog: Growatt SOC nedostupny 5 min, restartuji modbus bridge"
         level: warning
-    - alias: "Vypni solar switch"
-      service: switch.turn_off
+    - alias: "Restart modbus TCP/RTU bridge"
+      service: button.press
       target:
-        entity_id: switch.solar
-    - alias: "Cekej 10 sekund"
-      delay:
-        seconds: 10
-    - alias: "Zapni solar switch"
-      service: switch.turn_on
-      target:
-        entity_id: switch.solar
+        entity_id: button.modbus_tcp_rtu_bridge_restart
     - alias: "Cekej az se sensor obnovi (max 10 min)"
       wait_for_trigger:
         - platform: state
