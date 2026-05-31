@@ -222,3 +222,38 @@
       to: "on"
   action:
     - action: modbus.reload
+
+# =============================================================================
+# GBO - vypni kdyz uz moc solar predikce nezbyva
+# Pokud remaining energy prediction je nizka a SOC < 80%, vypni GBO
+# protoze uz nema cenu vytezovat baterku na prebytky
+# =============================================================================
+
+- id: gbo_off_low_solar_remaining
+  alias: "GBO - vypni pri nizke solar predikci"
+  description: >
+    Vypni switch.solar kdyz energy_production_today_remaining je nizka.
+    GBO vytezuje baterku na prebytky, ale kdyz uz moc nezbyva, nema to cenu.
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.energy_production_today_remaining
+      below: 0.5
+  condition:
+    - condition: state
+      entity_id: switch.solar
+      state: "on"
+    - condition: numeric_state
+      entity_id: sensor.growatt_battery_battery_soc
+      below: 80
+  action:
+    - alias: "Loguj vypnuti GBO"
+      service: system_log.write
+      data:
+        message: >
+          GBO: Solar remaining {{ states('sensor.energy_production_today_remaining') }} kWh,
+          SOC {{ states('sensor.growatt_battery_battery_soc') }}%%, vypínam switch.solar
+        level: info
+    - service: switch.turn_off
+      target:
+        entity_id: switch.solar
+  mode: single
