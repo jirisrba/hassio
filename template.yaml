@@ -53,26 +53,25 @@
       {{ (states('sensor.growatt_battery_battery_power') | float(0) * -1) | round(1) }}
 
   # GBO dovoleny odber ze site - horni byte EEUdcPIParam (addr 100)
-  # Nelinearni scale: hi=139 ~ 12.14A, hi=129 ~ 15.06A
-  # Pouze pro monitoring - pro zapis pouzij GreenBono HMI
+  # 255 = pravdepodobne neomezeno
   - name: "GBO Grid Import Limit Raw"
     unique_id: gbo_grid_import_limit_raw
     state_class: measurement
     icon: mdi:transmission-tower-import
     state: >-
-      {{ ((states('sensor.gbo_eeudcpiparam_raw') | int(0)) // 256) | bitwise_and(255) }}
+      {% set raw = states('sensor.gbo_eeudcpiparam_raw') | int(0) %}
+      {{ (raw // 256) | bitwise_and(255) }}
 
-  # GBO max proud invertoru - prepocet z raw hi byte
-  # Vzorec odvozen z mereni: hi=129→15.06A, hi=139→12.14A
-  # A = 52.728 - 0.292 × hi  (pozor: pouze 2 body, nelinearita mozna mimo rozsah)
+  # GBO max proud invertoru - dolni byte EEUdcPIParam (addr 100)
   - name: "GBO Inverter Current Limit"
     unique_id: gbo_inverter_current_limit
     unit_of_measurement: "A"
     device_class: current
     state_class: measurement
-    icon: mdi:transmission-tower-import
+    icon: mdi:current-ac
     state: >-
-      {{ (52.728 - 0.292 * (states('sensor.gbo_grid_import_limit_raw') | float(0))) | round(1) }}
+      {% set raw = states('sensor.gbo_eeudcpiparam_raw') | int(0) %}
+      {{ (raw % 256) | round(0) }}
 
   # GBO max nabijeci proud baterie - horni byte EEIzadLimit (addr 102)
   # scale: 1 digit = 0.4 A
@@ -114,11 +113,9 @@
 
 - sensor:
   # GBO SSR Boiler Output - register 18: upper byte = SamplesCnt, lower byte = OutputPI
-  # 100% = oba SSR na plno (2 * SamplesCnt), >100% = PI regulátor saturován
   - name: "GBO SSR Boiler Output"
     unique_id: gbo_ssr_boiler_output
     unit_of_measurement: "%"
-    device_class: power_factor
     state_class: measurement
     icon: mdi:water-boiler
     state: >-
@@ -126,7 +123,8 @@
       {% set samples = raw // 256 %}
       {% set fires = raw % 256 %}
       {% if samples > 0 %}
-        {{ (fires / (2 * samples) * 100) | round(0) }}
+        {% set total = (fires / samples * 100) %}
+        {{ [total, 200] | min | round(0) }}
       {% else %}0{% endif %}
 
   # GBO SSR1 - bojler ~2.2 kW (0-100%, saturates at SamplesCnt)
@@ -140,7 +138,8 @@
       {% set samples = raw // 256 %}
       {% set fires = raw % 256 %}
       {% if samples > 0 %}
-        {{ ([fires, samples] | min / samples * 100) | round(0) }}
+        {% set f1 = [fires, samples] | min %}
+        {{ (f1 / samples * 100) | round(0) }}
       {% else %}0{% endif %}
 
   # GBO SSR2 - spirála ~1.8 kW (0-100%, starts after SSR1 saturates)
@@ -154,5 +153,18 @@
       {% set samples = raw // 256 %}
       {% set fires = raw % 256 %}
       {% if samples > 0 %}
-        {{ ([[fires - samples, 0] | max, samples] | min / samples * 100) | round(0) }}
+        {% set f2 = [fires - samples, 0] | max %}
+        {% set f2 = [f2, samples] | min %}
+        {{ (f2 / samples * 100) | round(0) }}
       {% else %}0{% endif %}
+
+- binary_sensor:
+    - name: "GBO SSR1 On"
+      unique_id: gbo_ssr1_on
+      state: >-
+        {{ states('sensor.gbo_ssr1_output') | int(0) > 0 }}
+
+    - name: "GBO SSR2 On"
+      unique_id: gbo_ssr2_on
+      state: >-
+        {{ states('sensor.gbo_ssr2_output') | int(0) > 0 }}

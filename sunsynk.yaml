@@ -21,7 +21,7 @@ battery:
   auto_scale: true
   dynamic_colour: true
   max_power: 5600
-  energy: 3550
+  energy: 7100
   invert_power: true
   shutdown_soc: number.growatt_battery_bat_low_to_uti
 load:

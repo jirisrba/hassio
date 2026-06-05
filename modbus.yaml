@@ -1,39 +1,4 @@
 ####################################
-###   Growatt SPF (střídač)     ###
-####################################
-# Modbus TCP
-# Slave address: 1
-- name: growatt
-  type: tcp
-  host: 192.168.2.20
-  port: 502
-
-  sensors:
-    # Total Charge Current (nabíjecí proud baterie)
-    - name: Growatt Battery Charge Current
-      unique_id: growatt_battery_charge_current
-      device_class: current
-      unit_of_measurement: A
-      slave: 1
-      address: 83
-      input_type: input
-      data_type: int16
-      scale: 0.1
-      precision: 1
-
-    # Total Discharge Current (vybíjecí proud baterie)
-    - name: Growatt Battery Discharge Current
-      unique_id: growatt_battery_discharge_current
-      device_class: current
-      unit_of_measurement: A
-      slave: 1
-      address: 84
-      input_type: input
-      data_type: int16
-      scale: 0.1
-      precision: 1
-
-####################################
 ###   GBO-Aku (GreenBono)        ###
 ####################################
 # Modbus RTU over TCP via WiFi module
@@ -45,7 +10,7 @@
   host: 192.168.2.18
   port: 6770
   message_wait_milliseconds: 350  # GBO-Aku doc: min 350ms response window
-  timeout: 3                       # seconds, RTU over TCP needs extra time
+  timeout: 3                      # seconds, RTU over TCP needs extra time
 
   sensors:
     # Current L1 (kalibrovaná hodnota) [deciAmpéry]
@@ -103,7 +68,7 @@
 
     # EEUdcPIParam - raw hodnota (holding addr 100)
     # dolni byte = kompenzacni konstanta EMF baterie
-    # horni byte = dovoleny odber ze site (hi=139 ~ 12.14A, hi=129 ~ 15.06A; nelinearni scale)
+    # horni byte = dovoleny odber ze site
     - name: GBO EEUdcPIParam Raw
       unique_id: gbo_eeudcpiparam_raw
       slave: 3
