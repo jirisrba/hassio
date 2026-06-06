@@ -43,8 +43,8 @@
 
 # =============================================================================
 # WATCHDOG - RS485 prevodnik restart
-# Pokud je sensor nedostupny 5+ minut a switch.solar je zapnuty,
-# provede restart vypnutim/zapnutim switch.solar (power-cycle prevodniku).
+# Pokud je sensor nedostupny 5+ minut a switch.gbo je zapnuty,
+# provede restart vypnutim/zapnutim switch.gbo (power-cycle prevodniku).
 # mode: single zajisti ze bezi max jeden restart najednou.
 # =============================================================================
 
@@ -88,7 +88,7 @@
   description: >
     Pokud je sensor.gbo_battery_soc nedostupny 5 minut,
     restartuje GBO pres solar switch (power-cycle)
-    Plati jen kdyz je switch.solar zapnuty.
+    Plati jen kdyz je switch.gbo zapnuty.
   trigger:
     - platform: state
       entity_id: sensor.gbo_battery_soc
@@ -97,7 +97,7 @@
         minutes: 5
   condition:
     - condition: state
-      entity_id: switch.solar
+      entity_id: switch.gbo
       state: "on"
   action:
     - alias: "Loguj restart"
@@ -108,14 +108,14 @@
     - alias: "Vypni solar switch"
       service: switch.turn_off
       target:
-        entity_id: switch.solar
-    - alias: "Cekej 10 sekund"
+        entity_id: switch.gbo
+    - alias: "Cekej 5 sekund"
       delay:
-        seconds: 10
+        seconds: 5
     - alias: "Zapni solar switch"
       service: switch.turn_on
       target:
-        entity_id: switch.solar
+        entity_id: switch.gbo
     - alias: "Cekej az se sensor obnovi (max 10 min)"
       wait_for_trigger:
         - platform: state
@@ -198,24 +198,82 @@
   mode: single
 
 - id: gbo_modbus_stop_sunset
-  alias: "GBO modbus stop - switch.solar off"
+  alias: "GBO modbus stop - switch.gbo off"
   trigger:
     - platform: state
-      entity_id: switch.solar
+      entity_id: switch.gbo
       to: "off"
   action:
     - action: modbus.stop
       data:
         hub: greenbono
 
+
 - id: gbo_modbus_start_sunrise
-  alias: "GBO modbus start - switch.solar on"
+  alias: "GBO modbus start - switch.gbo on"
   trigger:
     - platform: state
-      entity_id: switch.solar
+      entity_id: switch.gbo
       to: "on"
+  mode: single
   action:
     - action: modbus.reload
+
+    - delay: "00:00:10"
+
+    # reg 0: minute<<8 | second
+    - action: modbus.write_register
+      data:
+        hub: greenbono
+        unit: 3
+        address: 0
+        value: >-
+          {{ (now().minute * 256 + now().second) | int }}
+
+    # reg 1: wday<<8 | hour
+    - action: modbus.write_register
+      data:
+        hub: greenbono
+        unit: 3
+        address: 1
+        value: >-
+          {{ ((now().isoweekday() % 7) * 256 + now().hour) | int }}
+
+    # reg 2: 0x0955
+    - action: modbus.write_register
+      data:
+        hub: greenbono
+        unit: 3
+        address: 2
+        value: 2389
+
+    # reg 3: month<<8 | day
+    - action: modbus.write_register
+      data:
+        hub: greenbono
+        unit: 3
+        address: 3
+        value: >-
+          {{ (now().month * 256 + now().day) | int }}
+
+    # reg 4: year % 100
+    - action: modbus.write_register
+      data:
+        hub: greenbono
+        unit: 3
+        address: 4
+        value: >-
+          {{ (now().year % 100) | int }}
+
+    - delay: "00:00:01"
+
+    # EEPROM confirm 0x55AA (0x55AA = 21930)
+    - action: modbus.write_register
+      data:
+        hub: greenbono
+        unit: 3
+        address: 76
+        value: 21930
 
 # =============================================================================
 # GBO - vypni kdyz uz moc solar predikce nezbyva
@@ -226,7 +284,7 @@
 - id: gbo_off_low_solar_remaining
   alias: "GBO - vypni pri nizke solar predikci"
   description: >
-    Vypni switch.solar kdyz energy_production_today_remaining je nizka.
+    Vypni switch.gbo kdyz energy_production_today_remaining je nizka.
     GBO vytezuje baterku na prebytky, obcas je potreba dovolit rebalance na 100% SOC.
   trigger:
     - platform: numeric_state
@@ -234,7 +292,7 @@
       below: 0.5
   condition:
     - condition: state
-      entity_id: switch.solar
+      entity_id: switch.gbo
       state: "on"
   action:
     - alias: "Loguj vypnuti GBO"
@@ -242,9 +300,9 @@
       data:
         message: >
           GBO: Solar remaining {{ states('sensor.energy_production_today_remaining') }} kWh,
-          SOC {{ states('sensor.growatt_battery_battery_soc') }}%%, vypínam switch.solar
+          SOC {{ states('sensor.growatt_battery_battery_soc') }}%%, vypínam switch.gbo
         level: info
     - service: switch.turn_off
       target:
-        entity_id: switch.solar
+        entity_id: switch.gbo
   mode: single
