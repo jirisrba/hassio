@@ -66,6 +66,20 @@
       data_type: int16
       precision: 0
 
+    - name: GBO RTC Reg 0
+      unique_id: gbo_rtc_reg_0
+      slave: 3
+      address: 0
+      input_type: holding
+      data_type: uint16
+
+    - name: GBO RTC Reg 1
+      unique_id: gbo_rtc_reg_1
+      slave: 3
+      address: 1
+      input_type: holding
+      data_type: uint16
+
     # EEUdcPIParam - raw hodnota (holding addr 100)
     # dolni byte = kompenzacni konstanta EMF baterie
     # horni byte = dovoleny odber ze site

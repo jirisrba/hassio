@@ -239,42 +239,6 @@
         value: >-
           {{ ((now().isoweekday() % 7) * 256 + now().hour) | int }}
 
-    # reg 2: 0x0955
-    - action: modbus.write_register
-      data:
-        hub: greenbono
-        unit: 3
-        address: 2
-        value: 2389
-
-    # reg 3: month<<8 | day
-    - action: modbus.write_register
-      data:
-        hub: greenbono
-        unit: 3
-        address: 3
-        value: >-
-          {{ (now().month * 256 + now().day) | int }}
-
-    # reg 4: year % 100
-    - action: modbus.write_register
-      data:
-        hub: greenbono
-        unit: 3
-        address: 4
-        value: >-
-          {{ (now().year % 100) | int }}
-
-    - delay: "00:00:01"
-
-    # EEPROM confirm 0x55AA (0x55AA = 21930)
-    - action: modbus.write_register
-      data:
-        hub: greenbono
-        unit: 3
-        address: 76
-        value: 21930
-
 # =============================================================================
 # GBO - vypni kdyz uz moc solar predikce nezbyva
 # Pokud remaining energy prediction je nizka a SOC < 80%, vypni GBO
@@ -289,7 +253,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.energy_production_today_remaining
-      below: 0.5
+      below: 1
   condition:
     - condition: state
       entity_id: switch.gbo
