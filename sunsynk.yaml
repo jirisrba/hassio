@@ -49,11 +49,11 @@ entities:
   pv1_voltage_109: sensor.growatt_solar_pv1_voltage
   pv1_current_110: sensor.growatt_solar_pv1_current
   pv1_power_186: sensor.growatt_solar_pv1_power
-  pv2_voltage_183: sensor.growatt_solar_pv2_voltage
-  pv2_current_184: sensor.growatt_solar_pv2_current
+  pv2_voltage_111: sensor.growatt_solar_pv2_voltage
+  pv2_current_112: sensor.growatt_solar_pv2_current
   pv2_power_187: sensor.growatt_solar_pv2_power
-  pv1_max_power: 3000
-  pv2_max_power: 3000
+  pv1_max_power: 2500
+  pv2_max_power: 2500
   efficiency: 4
   # SPF regs 48+49 combined
   day_pv_energy_108: sensor.growatt_solar_energy_today
@@ -88,7 +88,6 @@ entities:
   day_battery_discharge_71: sensor.growatt_battery_battery_discharge_today
 
   # Grid = total Shelly (all 3 phases)
-  grid_voltage_150: sensor.growatt_grid_grid_voltage
   grid_ct_power_172: sensor.shelly_pro3em_total_active_power
   grid_ct_power_L2: sensor.shelly_pro3em_phase_a_active_power
   grid_ct_power_L3: sensor.shelly_pro3em_phase_b_active_power
