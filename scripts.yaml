@@ -1,6 +1,6 @@
 gbo_set_soc_target:
   alias: "GBO: Nastav SOC cíl regulace"
-  description: "Zapíše nový SOC cíl do EEUdcZadana (addr 98) přes number entitu (FC16) a potvrdí EEPROM."
+  description: "Zapíše SOC cíl do EEUdcZadana (addr 98) přes FC16 a potvrdí EEPROM (addr 76)."
   fields:
     soc_percent:
       description: "Cílový SOC v % (0–100)"
@@ -16,18 +16,16 @@ gbo_set_soc_target:
         upper_byte: "{{ current_raw // 256 }}"
         new_value: "{{ upper_byte * 256 + (soc_percent | int) }}"
 
-    # FC16 pres number entitu (write_register pouziva FC6, GBO podporuje jen FC16)
-    - service: number.set_value
-      target:
-        entity_id: number.gbo_eeudczadana_write
+    # FC16 pres Python script - HA write_register pouziva FC6, GBO podporuje jen FC16
+    - service: shell_command.gbo_modbus_fc16
       data:
+        address: 98
         value: "{{ new_value }}"
 
     - delay: "00:00:01"
 
-    # EEPROM potvrzeni - bezprostredne po zapisu dat
-    - service: number.set_value
-      target:
-        entity_id: number.gbo_chksumee_write
+    # EEPROM potvrzeni bezprostredne po zapisu (addr 76 = ChkSumEE = 0x55AA = 21930)
+    - service: shell_command.gbo_modbus_fc16
       data:
+        address: 76
         value: 21930

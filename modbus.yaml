@@ -128,21 +128,3 @@
       data_type: uint16
       precision: 0
 
-  numbers:
-    # EEUdcZadana - zapis SOC cile (FC16, holding addr 98)
-    - name: GBO EEUdcZadana Write
-      unique_id: gbo_eeudczadana_write
-      slave: 3
-      address: 98
-      data_type: uint16
-      min_value: 0
-      max_value: 65535
-
-    # ChkSumEE - EEPROM potvrzeni (FC16, holding addr 76, hodnota 0x55AA=21930)
-    - name: GBO ChkSumEE Write
-      unique_id: gbo_chksumee_write
-      slave: 3
-      address: 76
-      data_type: uint16
-      min_value: 0
-      max_value: 65535
