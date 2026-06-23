@@ -1,6 +1,6 @@
 gbo_set_soc_target:
   alias: "GBO: Nastav SOC cíl regulace"
-  description: "Zapíše nový SOC cíl do EEUdcZadana (addr 98) a potvrdí EEPROM zápis."
+  description: "Zapíše nový SOC cíl do EEUdcZadana (addr 98) a potvrdí EEPROM zápis (FC16)."
   fields:
     soc_percent:
       description: "Cílový SOC v % (0–100)"
@@ -16,19 +16,20 @@ gbo_set_soc_target:
         upper_byte: "{{ current_raw // 256 }}"
         new_value: "{{ upper_byte * 256 + (soc_percent | int) }}"
 
-    # EEPROM unlock - musi byt pred zapisem dat
-    - service: modbus.write_register
-      data:
-        hub: greenbono
-        slave: 3
-        address: 76
-        value: 21930
-
-    - delay: "00:00:01"
-
-    - service: modbus.write_register
+    # FC16 - jediny podporovany zapis GBO (FC6 write_register GBO ignoruje)
+    - service: modbus.write_registers
       data:
         hub: greenbono
         slave: 3
         address: 98
-        value: "{{ new_value }}"
+        values: "{{ [new_value] }}"
+
+    - delay: "00:00:01"
+
+    # EEPROM potvrzeni - bezprostredne po zapisu dat (addr 76 = ChkSumEE = 0x55AA)
+    - service: modbus.write_registers
+      data:
+        hub: greenbono
+        slave: 3
+        address: 76
+        values: [21930]
