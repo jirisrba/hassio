@@ -22,7 +22,7 @@ gbo_set_soc_target:
         hub: greenbono
         slave: 3
         address: 98
-        value: ["{{ new_value }}"]
+        value: "{{ [new_value | int] }}"
 
     - delay: "00:00:01"
 
