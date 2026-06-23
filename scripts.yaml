@@ -16,7 +16,14 @@ gbo_set_soc_target:
         upper_byte: "{{ current_raw // 256 }}"
         new_value: "{{ upper_byte * 256 + (soc_percent | int) }}"
 
-    # FC16 pres Python script - HA write_register pouziva FC6, GBO podporuje jen FC16
+    # Uvolni TCP spojeni - GBO WiFi modul akceptuje jen 1 spojeni
+    - service: modbus.stop
+      data:
+        hub: greenbono
+
+    - delay: "00:00:01"
+
+    # FC16 zapis SOC cile
     - service: shell_command.gbo_modbus_fc16
       data:
         address: 98
@@ -24,8 +31,15 @@ gbo_set_soc_target:
 
     - delay: "00:00:01"
 
-    # EEPROM potvrzeni bezprostredne po zapisu (addr 76 = ChkSumEE = 0x55AA = 21930)
+    # EEPROM potvrzeni (addr 76 = ChkSumEE = 0x55AA = 21930)
     - service: shell_command.gbo_modbus_fc16
       data:
         address: 76
         value: 21930
+
+    - delay: "00:00:01"
+
+    # Obnov modbus hub
+    - service: modbus.start
+      data:
+        hub: greenbono
