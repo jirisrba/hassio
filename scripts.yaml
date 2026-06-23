@@ -16,19 +16,19 @@ gbo_set_soc_target:
         upper_byte: "{{ current_raw // 256 }}"
         new_value: "{{ upper_byte * 256 + (soc_percent | int) }}"
 
-    - service: modbus.write_register
-      data:
-        hub: greenbono
-        slave: 3
-        address: 98
-        value: "{{ new_value }}"
-
-    - delay: "00:00:01"
-
-    # EEPROM potvrzeni - bez tohoto se hodnota neuloži
+    # EEPROM unlock - musi byt pred zapisem dat
     - service: modbus.write_register
       data:
         hub: greenbono
         slave: 3
         address: 76
         value: 21930
+
+    - delay: "00:00:01"
+
+    - service: modbus.write_register
+      data:
+        hub: greenbono
+        slave: 3
+        address: 98
+        value: "{{ new_value }}"
