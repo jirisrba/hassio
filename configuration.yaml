@@ -18,7 +18,7 @@ input_select:
 input_number:
   gbo_soc_target:
     name: "GBO SOC cíl regulace"
-    min: 50
+    min: 85
     max: 100
     step: 1
     unit_of_measurement: "%"
