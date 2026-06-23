@@ -92,4 +92,3 @@ template: !include template.yaml
 
 shell_command:
   git_pull: "cd /config && git pull origin master"
-  gbo_modbus_fc16: "python3 /config/gbo_modbus_fc16.py {{ address }} {{ value }}"
