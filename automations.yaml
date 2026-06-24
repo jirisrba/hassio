@@ -129,35 +129,6 @@
   mode: single
   max_exceeded: silent
 
-# =============================================================================
-# GBO ExternControl - input_select → modbus zápis
-# Při změně input_select.gbo_extern_control zapíše správnou hodnotu na addr 14
-# RAM registr = neomezený počet zápisů
-# =============================================================================
-
-- id: gbo_extern_control_write
-  alias: "GBO - write ExternControl from input_select"
-  trigger:
-    - platform: state
-      entity_id: input_select.gbo_extern_control
-  action:
-    - service: script.gbo_set_extern_control
-      data:
-        mode: "{{ trigger.to_state.state }}"
-  mode: single
-
-- id: gbo_extern_control_sync
-  alias: "GBO - sync ExternControl sensor → input_select"
-  trigger:
-    - platform: state
-      entity_id: sensor.gbo_extern_control_state
-      not_to:
-        - unavailable
-        - unknown
-  action:
-    - service: script.gbo_sync_extern_control
-  mode: single
-
 - id: gbo_modbus_stop_sunset
   alias: "GBO modbus stop - switch.gbo off"
   trigger:
@@ -204,9 +175,6 @@
     - service: script.gbo_set_soc_target
       data:
         soc_percent: 94
-
-    # Sync ExternControl sensor → input_select po startu
-    - service: script.gbo_sync_extern_control
 
 # =============================================================================
 # GBO - vypni kdyz uz moc solar predikce nezbyva
