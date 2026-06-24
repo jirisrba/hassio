@@ -203,21 +203,6 @@
     state: >-
       {{ (states('sensor.gbo_relay_status_raw') | int(0) | bitwise_and(2)) > 0 }}
 
-  - name: "GBO SSR1 On"
-    unique_id: gbo_ssr1_on
-    state: >-
-      {{ states('sensor.gbo_ssr1_output') | int(0) > 0 }}
-
-  - name: "GBO SSR2 On"
-    unique_id: gbo_ssr2_on
-    state: >-
-      {{ states('sensor.gbo_ssr2_output') | int(0) > 0 }}
-
-  - name: "GBO SSR3 On"
-    unique_id: gbo_ssr3_on
-    state: >-
-      {{ states('sensor.gbo_ssr3_output') | int(0) > 0 }}
-
   - name: "GBO RTC cas je OK"
     unique_id: gbo_rtc_cas_ok
     icon: mdi:clock-check-outline
