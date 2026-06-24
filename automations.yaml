@@ -137,64 +137,25 @@
 
 - id: gbo_extern_control_write
   alias: "GBO - write ExternControl from input_select"
-  description: >
-    On input_select.gbo_extern_control change, writes to modbus addr 14 (RAM):
-    regulation=16128 (0x3F00), force_on=48896 (0xBF00), force_off=32512 (0x7F00)
   trigger:
     - platform: state
       entity_id: input_select.gbo_extern_control
   action:
-    - service: modbus.write_register
+    - service: script.gbo_set_extern_control
       data:
-        hub: greenbono
-        slave: 3
-        address: 14
-        value: >
-          {% set values = {
-            'force_on':   "0xBF00" | int(0, 16),
-            'force_off':  "0x7F00" | int(0, 16),
-            'regulation': "0x3F00" | int(0, 16)
-          } %}
-          {{ values.get(trigger.to_state.state, "0x3F00" | int(0, 16)) }}
+        mode: "{{ trigger.to_state.state }}"
   mode: single
-
-# =============================================================================
-# GBO ExternControl - sync z GBO senzoru → input_select
-# Pokud se hodnota v GBO změní externě (ručně, restart), synchronizuje HA UI
-# =============================================================================
 
 - id: gbo_extern_control_sync
   alias: "GBO - sync ExternControl sensor → input_select"
-  description: >
-    If sensor.gbo_extern_control_state changes outside HA
-    (GBO restart, manual change), syncs input_select.gbo_extern_control
   trigger:
     - platform: state
       entity_id: sensor.gbo_extern_control_state
-  condition:
-    - condition: template
-      value_template: >
-        {% set val = trigger.to_state.state | int(0) %}
-        {% set mode = states('input_select.gbo_extern_control') %}
-        {% set expected = {
-          'regulation': "0x3F00" | int(0, 16),
-          'force_on':   "0xBF00" | int(0, 16),
-          'force_off':  "0x7F00" | int(0, 16)
-        } %}
-        {{ val != expected.get(mode, -1) }}
+      not_to:
+        - unavailable
+        - unknown
   action:
-    - service: input_select.select_option
-      target:
-        entity_id: input_select.gbo_extern_control
-      data:
-        option: >
-          {% set val = trigger.to_state.state | int(0) %}
-          {% set modes = {
-            "0xBF00" | int(0, 16): 'force_on',
-            "0x7F00" | int(0, 16): 'force_off',
-            "0x3F00" | int(0, 16): 'regulation'
-          } %}
-          {{ modes.get(val, 'regulation') }}
+    - service: script.gbo_sync_extern_control
   mode: single
 
 - id: gbo_modbus_stop_sunset
@@ -243,6 +204,9 @@
     - service: script.gbo_set_soc_target
       data:
         soc_percent: 94
+
+    # Sync ExternControl sensor → input_select po startu
+    - service: script.gbo_sync_extern_control
 
 # =============================================================================
 # GBO - vypni kdyz uz moc solar predikce nezbyva
