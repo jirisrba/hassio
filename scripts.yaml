@@ -57,28 +57,3 @@ gbo_set_extern_control:
             'regulation': 0x3F00
           } %}
           {{ values.get(mode, 0x3F00) }}
-
-gbo_sync_extern_control:
-  alias: "GBO: Sync ExternControl sensor → input_select"
-  description: "Přečte aktuální hodnotu sensoru a aktualizuje input_select (jen pokud se liší)."
-  sequence:
-    - variables:
-        val: "{{ states('sensor.gbo_extern_control_state') | int(-1) }}"
-        new_mode: >
-          {% set modes = {
-            0xBF00: 'force_on',
-            0x7F00: 'force_off',
-            0x3F00: 'regulation'
-          } %}
-          {{ modes.get(val, '') }}
-        current_mode: "{{ states('input_select.gbo_extern_control') }}"
-
-    # Pokud sensor nema platnou hodnotu nebo uz input_select sedi, nedela nic
-    - condition: template
-      value_template: "{{ new_mode != '' and new_mode != current_mode }}"
-
-    - service: input_select.select_option
-      target:
-        entity_id: input_select.gbo_extern_control
-      data:
-        option: "{{ new_mode }}"

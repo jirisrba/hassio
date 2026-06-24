@@ -4,15 +4,6 @@ homeassistant:
   country: CZ
   time_zone: Europe/Prague
 
-input_select:
-  gbo_extern_control:
-    name: "GBO Control Mode"
-    options:
-      - "regulation"  # 0x3F00 = 16128 — GBO controls autonomously (solar surplus)
-      - "force_on"    # 0xBF00 = 48896 — force everything on (battery discharge)
-      - "force_off"   # 0x7F00 = 32512 — force everything off
-    initial: "regulation"
-    icon: mdi:solar-power
 
 # Utility meter
 utility_meter:
