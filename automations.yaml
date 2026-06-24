@@ -239,6 +239,11 @@
         value: >-
           {{ ((now().isoweekday() % 7) * 256 + now().hour) | int }}
 
+    # Obnov SOC cil po startu GBO (EEPROM se po restartu resetuje na FLASH backup)
+    - service: script.gbo_set_soc_target
+      data:
+        soc_percent: 94
+
 # =============================================================================
 # GBO - vypni kdyz uz moc solar predikce nezbyva
 # Pokud remaining energy prediction je nizka a SOC < 80%, vypni GBO
