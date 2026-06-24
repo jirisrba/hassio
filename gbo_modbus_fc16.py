@@ -2,15 +2,15 @@
 """FC16 (Write Multiple Registers) pro GBO RTU-over-TCP.
 
 Pouziti:
-  python3 gbo_modbus_fc16.py <soc_percent> [upper_byte]
+  python3 gbo_modbus_fc16.py <address> <value>
 
-Provede oba zapisy v jednom TCP spojeni:
-  1. addr 98 (EEUdcZadana) = upper_byte * 256 + soc_percent
-  2. addr 76 (ChkSumEE)    = 0x55AA = EEPROM potvrzeni
+Zapise value do address pres FC16, pak odeslat fixni EEPROM potvrzeni
+(addr 76 = ChkSumEE = 0x55AA). Oba zapisy v jednom TCP spojeni.
 """
 import sys
 import socket
 import struct
+import time
 
 HOST = '192.168.2.18'
 PORT = 6770
@@ -29,19 +29,16 @@ def build_frame(address, value):
     frame = struct.pack('>BBHHBH', SLAVE, 0x10, address, 1, 2, value & 0xFFFF)
     return frame + struct.pack('<H', crc16(frame))
 
-def write_soc(soc_percent, upper_byte=255):
-    new_value = upper_byte * 256 + soc_percent
+def write_eeprom(address, value):
     ops = [
-        (98, new_value),
-        (76, 0x55AA),
+        (address, value),
+        (76, 0x55AA),   # ChkSumEE - EEPROM potvrzeni (fixni)
     ]
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(5)
     s.connect((HOST, PORT))
-    import time
     for addr, val in ops:
-        frame = build_frame(addr, val)
-        s.send(frame)
+        s.send(build_frame(addr, val))
         time.sleep(WAIT)
         try:
             resp = s.recv(256)
@@ -51,6 +48,4 @@ def write_soc(soc_percent, upper_byte=255):
     s.close()
 
 if __name__ == '__main__':
-    soc = int(sys.argv[1])
-    upper = int(sys.argv[2]) if len(sys.argv) > 2 else 255
-    write_soc(soc, upper)
+    write_eeprom(int(sys.argv[1]), int(sys.argv[2]))

@@ -1,6 +1,6 @@
 gbo_set_soc_target:
   alias: "GBO: Nastav SOC cíl regulace"
-  description: "Zapíše SOC cíl do EEUdcZadana (addr 98) + EEPROM potvrzení (addr 76) v jednom TCP spojení."
+  description: "Zapíše SOC cíl do EEUdcZadana (addr 98) + EEPROM potvrzení (addr 76)."
   fields:
     soc_percent:
       description: "Cílový SOC v % (0–100)"
@@ -14,19 +14,18 @@ gbo_set_soc_target:
     - variables:
         current_raw: "{{ states('sensor.gbo_eeudczadana_raw') | int(0) }}"
         upper_byte: "{{ current_raw // 256 }}"
+        new_value: "{{ upper_byte * 256 + (soc_percent | int) }}"
 
-    # Uvolni TCP spojeni - GBO WiFi modul akceptuje jen 1 spojeni
     - service: modbus.stop
       data:
         hub: greenbono
 
     - delay: "00:00:01"
 
-    # Python script: oba zapisy v jednom TCP spojeni bez pymodbus retry problemu
     - service: shell_command.gbo_modbus_fc16
       data:
-        soc: "{{ soc_percent | int }}"
-        upper: "{{ upper_byte | int }}"
+        address: 98
+        value: "{{ new_value | int }}"
 
     - delay: "00:00:01"
 

@@ -270,15 +270,3 @@
       target:
         entity_id: switch.gbo
   mode: single
-
-- id: gbo_soc_target_changed
-  alias: "GBO: Zapis SOC cil pri zmene slideru"
-  description: "Kdyz uzivatel zmeni input_number.gbo_soc_target, zapise hodnotu do GBO pres modbus FC16"
-  trigger:
-    - platform: state
-      entity_id: input_number.gbo_soc_target
-  action:
-    - service: script.gbo_set_soc_target
-      data:
-        soc_percent: "{{ trigger.to_state.state | int }}"
-  mode: single
