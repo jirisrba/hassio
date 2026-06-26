@@ -2,10 +2,10 @@
 """FC16 (Write Multiple Registers) pro GBO RTU-over-TCP.
 
 Pouziti:
-  python3 gbo_modbus_fc16.py <address> <value>
+  python3 gbo_modbus_fc16.py <address> <value> [--flash]
 
-Zapise value do address pres FC16, pak odeslat fixni EEPROM potvrzeni
-(addr 76 = ChkSumEE = 0x55AA). Oba zapisy v jednom TCP spojeni.
+Zapise value do address pres FC16, pak EEPROM potvrzeni (addr 76 = 0x55AA).
+S --flash navic zapise trigger 0x5200 na addr 386 = GBO ulozi do Flash a restartuje.
 """
 import sys
 import socket
@@ -29,11 +29,13 @@ def build_frame(address, value):
     frame = struct.pack('>BBHHBH', SLAVE, 0x10, address, 1, 2, value & 0xFFFF)
     return frame + struct.pack('<H', crc16(frame))
 
-def write_eeprom(address, value):
+def write_eeprom(address, value, save_to_flash=False):
     ops = [
         (address, value),
-        (76, 0x55AA),   # ChkSumEE - EEPROM potvrzeni (fixni)
+        (76, 0x55AA),   # ChkSumEE - EEPROM potvrzeni
     ]
+    if save_to_flash:
+        ops.append((386, 0x5200))  # Save to Flash trigger - GBO restartuje
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(5)
     s.connect((HOST, PORT))
@@ -48,4 +50,5 @@ def write_eeprom(address, value):
     s.close()
 
 if __name__ == '__main__':
-    write_eeprom(int(sys.argv[1]), int(sys.argv[2]))
+    flash = '--flash' in sys.argv
+    write_eeprom(int(sys.argv[1]), int(sys.argv[2]), save_to_flash=flash)
