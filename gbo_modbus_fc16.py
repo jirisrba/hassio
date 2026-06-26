@@ -2,10 +2,14 @@
 """FC16 (Write Multiple Registers) pro GBO RTU-over-TCP.
 
 Pouziti:
-  python3 gbo_modbus_fc16.py <address> <value> [--flash]
+  python3 gbo_modbus_fc16.py <address> <value>
+  python3 gbo_modbus_fc16.py <address> <value> --flash
 
-Zapise value do address pres FC16, pak EEPROM potvrzeni (addr 76 = 0x55AA).
-S --flash navic zapise trigger 0x5200 na addr 386 = GBO ulozi do Flash a restartuje.
+Bez --flash: zapise value na address + EEPROM potvrzeni (addr 76 = 0x55AA).
+S --flash:   zapise value primo na flash area (addr 256+) bez ChkSumEE,
+             pak trigger 0x5200 na addr 386 = GBO ulozi Flash a restartuje.
+
+Flash area SOC target: addr 296 (= 256 + 40), hodnota = 0xFF00 | soc_percent
 """
 import sys
 import socket
@@ -29,13 +33,7 @@ def build_frame(address, value):
     frame = struct.pack('>BBHHBH', SLAVE, 0x10, address, 1, 2, value & 0xFFFF)
     return frame + struct.pack('<H', crc16(frame))
 
-def write_eeprom(address, value, save_to_flash=False):
-    ops = [
-        (address, value),
-        (76, 0x55AA),   # ChkSumEE - EEPROM potvrzeni
-    ]
-    if save_to_flash:
-        ops.append((386, 0x5200))  # Save to Flash trigger - GBO restartuje
+def write_registers(ops):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(5)
     s.connect((HOST, PORT))
@@ -49,6 +47,23 @@ def write_eeprom(address, value, save_to_flash=False):
             print(f'WARN addr={addr}: {e}', flush=True)
     s.close()
 
+def write_eeprom(address, value):
+    write_registers([
+        (address, value),
+        (76, 0x55AA),   # ChkSumEE - EEPROM potvrzeni
+    ])
+
+def write_flash(address, value):
+    # addr 256+ je flash write area - bez ChkSumEE, pak restart trigger
+    write_registers([
+        (address, value),
+        (386, 0x5200),  # Flash commit + GBO restart
+    ])
+
 if __name__ == '__main__':
-    flash = '--flash' in sys.argv
-    write_eeprom(int(sys.argv[1]), int(sys.argv[2]), save_to_flash=flash)
+    addr = int(sys.argv[1])
+    val  = int(sys.argv[2])
+    if '--flash' in sys.argv:
+        write_flash(addr, val)
+    else:
+        write_eeprom(addr, val)
